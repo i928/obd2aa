@@ -247,7 +247,6 @@ public class HackerService extends Service {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        OBD2Background.isrunning = false;
     }
 
     private void stop() {

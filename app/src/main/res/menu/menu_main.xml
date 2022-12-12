@@ -7,10 +7,6 @@
         android:icon="@android:drawable/ic_menu_preferences"
         android:title="@string/settings" />
     <item
-        android:id="@+id/speedcam_menu"
-        android:icon="@android:drawable/ic_menu_preferences"
-        android:title="@string/speedcam_settings" />
-    <item
         android:id="@+id/tpms_menu"
         android:title="TPMS" />
 </menu>

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
-import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.Surface;
 
@@ -28,20 +27,9 @@ public class OBD2AA extends Screen implements SurfaceCallback {
 
     private final CarContext carContext;
     private final Context context;
-    private ArcProgress arcProgress;
     private final PreferencesHelper preferences;
 
     private final int gauge_number;
-    private OBD2Background mOBD2Service;
-    private final String[] pids;
-    private final long[] lastpiddraw;
-    private boolean isshowing;
-    private final boolean useDigital;
-    private final String[] units;
-    private final Boolean[] convertunits;
-    private final Boolean isdebugging;
-    private MediaPlayer mediaPlayer;
-    private boolean prepared;
 
     public OBD2AA(CarContext carContext, Context context) {
 
@@ -51,12 +39,6 @@ public class OBD2AA extends Screen implements SurfaceCallback {
 
         preferences = PreferencesHelper.getPreferences(carContext);
         gauge_number = preferences.getNumberOfGauges();
-        useDigital = preferences.shouldUseDigital();
-        pids = new String[gauge_number];
-        lastpiddraw = new long[gauge_number];
-        units = new String[gauge_number];
-        convertunits = new Boolean[gauge_number];
-        isdebugging = preferences.isDebugging();
         Log.d("OBD2AA", "OBD2AA APP STARTED, BEFORE BIND.");
 
         carContext.getCarService(AppManager.class).setSurfaceCallback(this);

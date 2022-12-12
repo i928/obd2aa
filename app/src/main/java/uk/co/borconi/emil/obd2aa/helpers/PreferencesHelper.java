@@ -56,10 +56,6 @@ public class PreferencesHelper {
         return preferences.getBoolean("alternativepulling", false);
     }
 
-    public boolean shouldShowSpeedCamWarning() {
-        return preferences.getBoolean("ShowSpeedCamWarrning", true);
-    }
-
     public boolean shouldPlaySound() {
         return preferences.getBoolean("play_sound", true);
     }
@@ -95,10 +91,6 @@ public class PreferencesHelper {
     public int getUpdateFrequency() {
         String output = preferences.getString("mobile_update_freq", "3000");
         return Integer.parseInt(output);
-    }
-
-    public Set<String> getCamTypes() {
-        return preferences.getStringSet("cam_types", new HashSet<>(Arrays.asList("1,2,3,4".split(","))));
     }
 
     public boolean isNight() {
