@@ -33,7 +33,6 @@
     />
     <ImageView
         android:id="@+id/imagelistpreference_image"
-        android:tint="#FF000000"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_margin="5dp"

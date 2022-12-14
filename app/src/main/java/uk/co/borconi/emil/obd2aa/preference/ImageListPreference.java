@@ -28,11 +28,9 @@ public class ImageListPreference extends ListPreference {
     static final int DEFAULT_TINT = 0xFF000000;
     private final List<Integer> mImages;
     private final int mErrorResource;
-    private final boolean mUseCard;
-    private final int mCustomItemLayout;
-    private int mTintColor;
+    //private final boolean mUseCard;
+    //private final int mCustomItemLayout;
     private int mBackgroundColor;
-
 
     public ImageListPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -47,15 +45,11 @@ public class ImageListPreference extends ListPreference {
             String tintKey = array.getNonResourceString(R.styleable.ImageListPreference_ilp_tintKey);
             String backgroundKey = array.getNonResourceString(R.styleable.ImageListPreference_ilp_backgroundTint);
 
-            mTintColor = array.getColor(R.styleable.ImageListPreference_ilp_tint, DEFAULT_TINT);
             mBackgroundColor = array.getColor(R.styleable.ImageListPreference_ilp_backgroundTint, 0);
             mErrorResource = array.getResourceId(R.styleable.ImageListPreference_ilp_errorImage, 0);
-            mUseCard = array.getBoolean(R.styleable.ImageListPreference_ilp_useCard, false);
-            mCustomItemLayout = array.getResourceId(R.styleable.ImageListPreference_ilp_itemLayout, 0);
+            //mUseCard = array.getBoolean(R.styleable.ImageListPreference_ilp_useCard, false);
+            //mCustomItemLayout = array.getResourceId(R.styleable.ImageListPreference_ilp_itemLayout, 0);
 
-            if (tintKey != null) {
-                mTintColor = preferences.getColor(tintKey, mTintColor);
-            }
             if (backgroundKey != null) {
                 mBackgroundColor = preferences.getColor(backgroundKey, mBackgroundColor);
             }
@@ -88,12 +82,12 @@ public class ImageListPreference extends ListPreference {
 
         int layout = R.layout.imagelistpreference_item;
         ListAdapter adapter = new ImageListPreferenceAdapter(getContext(), layout, items);
-        if (mUseCard) {
+        /*if (mUseCard) {
             layout = R.layout.imagelistpreference_item_card;
         }
         if (mCustomItemLayout != 0) {
             layout = mCustomItemLayout;
-        }
+        }*/
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
@@ -177,9 +171,6 @@ public class ImageListPreference extends ListPreference {
                 holder.iconImage.setImageResource(mErrorResource);
             }
 
-            if (mTintColor != 0) {
-                holder.iconImage.setColorFilter(mTintColor);
-            }
             if (mBackgroundColor != 0) {
                 holder.iconImage.setBackgroundColor(mBackgroundColor);
             }

@@ -2,21 +2,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!--uk.co.borconi.emil.obd2aa.preference.ImageListPreference
+    <uk.co.borconi.emil.obd2aa.preference.ImageListPreference
         android:entries="@array/LayoutEntries"
         android:entryValues="@array/LayoutEntriesValues"
         android:key="layout_style_spinner"
         android:title="@string/layout_style"
         app:iconSpaceReserved="false"
         app:ilp_entryImages="@array/LayoutEntriesImages"
-        app:useSimpleSummaryProvider="true" /-->
-
-    <androidx.preference.ListPreference
-        android:entries="@array/LayoutEntries"
-        android:entryValues="@array/LayoutEntriesValues"
-        android:key="layout_style_spinner"
-        android:title="@string/layout_style"
-        app:iconSpaceReserved="false"
         app:useSimpleSummaryProvider="true" />
 
     <androidx.preference.EditTextPreference

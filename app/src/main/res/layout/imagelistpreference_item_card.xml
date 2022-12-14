@@ -46,7 +46,6 @@
             android:id="@+id/imagelistpreference_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:tint="#FF000000"
             android:src="@android:drawable/ic_dialog_map"
             android:padding="8dp"
         />
