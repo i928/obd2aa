@@ -127,6 +127,12 @@ public class PreferencesHelper {
         return Integer.parseInt(output);
     }
 
+    public int getAutoLayoutNumberOfRowGauges()
+    {
+        String output = preferences.getString("auto_layout_row_gauges", "4");
+        return Integer.parseInt(output);
+    }
+
     public boolean shouldUseMobile() {
         return preferences.getBoolean("use_mobile", true);
     }

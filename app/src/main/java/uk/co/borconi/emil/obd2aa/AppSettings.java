@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 
@@ -23,7 +24,7 @@ public class AppSettings extends PreferenceFragmentCompat {
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.gauge_preferences);
         findPreferenceByKey("layout_style_spinner").setOnPreferenceChangeListener((Preference preference, Object newValue) -> {
-            updateGaugeCounterDisabledStatus();
+            updateGaugeCounterDisabledStatus(newValue.toString());
             return true;
         });
         findPreferenceByKey("gauge_counter").setOnPreferenceChangeListener((Preference preference, Object newValue) -> {
@@ -31,7 +32,7 @@ public class AppSettings extends PreferenceFragmentCompat {
             return true;
         });
         initGaugeCount();
-        updateGaugeCounterDisabledStatus();
+        updateGaugeCounterDisabledStatus(((ListPreference)findPreferenceByKey("layout_style_spinner")).getValue());
     }
 
     @Override
@@ -65,29 +66,36 @@ public class AppSettings extends PreferenceFragmentCompat {
         }
     }
 
-    private void updateGaugeCounterDisabledStatus() {
-        String layoutStyle = ((ListPreference) findPreferenceByKey("layout_style_spinner")).getValue();
+    private void updateGaugeCounterDisabledStatus(String newLayoutValue) {
+        //ListPreference layoutStylePreference = findPreferenceByKey("layout_style_spinner");
+        ListPreference gaugeCounterPreference = findPreferenceByKey("gauge_counter");
+        EditTextPreference autoLayoutPreference = findPreferenceByKey("auto_layout_row_gauges");
 
-        if ("AUTO".equalsIgnoreCase(layoutStyle)) {
-            findPreferenceByKey("gauge_counter").setEnabled(true);
+        //String layoutStyle = layoutStylePreference.getValue();
+
+        if ("AUTO".equalsIgnoreCase(newLayoutValue))
+        {
+            gaugeCounterPreference.setEnabled(true);
+            autoLayoutPreference.setEnabled(true);
             return;
         }
+        // else
+        gaugeCounterPreference.setEnabled(false);
+        autoLayoutPreference.setEnabled(false);
 
-        findPreferenceByKey("gauge_counter").setEnabled(false);
         String newGaugeCount = new HashMap<String, String>() {{
             put("1", "5");
             put("2", "3");
             put("3", "4");
-        }}.get(layoutStyle);
+        }}.get(newLayoutValue);
 
         if (newGaugeCount == null) {
-            ((ListPreference) findPreferenceByKey("layout_style_spinner")).setValue("AUTO");
-            ((ListPreference) findPreferenceByKey("gauge_counter")).setValue("1");
-            findPreferenceByKey("gauge_counter").setEnabled(true);
+            ((ListPreference)findPreferenceByKey("layout_style_spinner")).setValue("AUTO");
+            gaugeCounterPreference.setValue("1");
+            gaugeCounterPreference.setEnabled(true);
             newGaugeCount = "1";
         }
-        Preference preference = findPreferenceByKey("gauge_counter");
-        ((ListPreference) preference).setValue(newGaugeCount);
+        gaugeCounterPreference.setValue(newGaugeCount);
         updateGaugeCount(Integer.parseInt(newGaugeCount));
     }
 
