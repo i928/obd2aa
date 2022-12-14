@@ -29,14 +29,6 @@
         >
     </fragment>
 
-
-    <fragment
-        android:id="@+id/AppCameraSettings"
-        android:name="uk.co.borconi.emil.obd2aa.AppCameraSettings"
-        android:label="@string/speedcam_settings"
-        >
-    </fragment>
-
  <fragment
         android:id="@+id/TpmsSettings"
         android:name="uk.co.borconi.emil.obd2aa.TpmsSettings"

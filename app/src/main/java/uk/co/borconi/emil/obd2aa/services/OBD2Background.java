@@ -151,7 +151,6 @@ public class OBD2Background {
 
         IntentFilter filter = new IntentFilter();
         filter.addAction("org.prowl.torque.ALARM_TRIGGERED");
-        filter.addAction("stop.camera.uk.co.boconi.emil.obd2aa");
         context.registerReceiver(receiver, filter);
 
         /* Register Torque Service only if autostart is enabled */
@@ -526,50 +525,5 @@ public class OBD2Background {
         mNotifyMgr.notify(1984,mynot.build());
 
 */
-    }
-
-    protected void showNotification(String Title, String Subtitle, int actionicon, Bitmap thumbnail, int cameraid) {
-/*
-        CarToast.makeText(getBaseContext(), Title+" "+Subtitle, Toast.LENGTH_LONG).show();
-
-        NotificationManager mNotifyMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        String NOTIFICATION_CHANNEL_ID = "speedcam_not_channel";
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_DEFAULT);
-
-            // Configure the notification channel.
-            notificationChannel.setDescription("Channel used for Speed cameras");
-            mNotifyMgr.createNotificationChannel(notificationChannel);
-        }
-
-        Intent intent = new Intent(this, OBD2_Background.class);
-        intent.setAction("stop.camera.uk.co.boconi.emil.obd2aa");
-        intent.putExtra("camerid",cameraid);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, 0);
-
-        CarNotificationExtender paramString2 = new CarNotificationExtender.Builder()
-                .setTitle(Title)
-                .setSubtitle(Subtitle)
-                .setShouldShowAsHeadsUp(true)
-                .setActionIconResId(actionicon)
-                .setBackgroundColor(Color.WHITE)
-                .setNightBackgroundColor(Color.DKGRAY)
-                .setThumbnail(thumbnail)
-
-                .build();
-
-        NotificationCompat.Builder mynot = new NotificationCompat.Builder(this,NOTIFICATION_CHANNEL_ID)
-                .setContentTitle(Title)
-                .setContentText(Subtitle)
-                .setLargeIcon(thumbnail)
-                .setSmallIcon(actionicon)
-                .extend(paramString2);
-
-        mynot.setContentIntent(pendingIntent).setDeleteIntent(pendingIntent);
-
-        mNotifyMgr.notify(1985,mynot.build());
-*/
-
     }
 }

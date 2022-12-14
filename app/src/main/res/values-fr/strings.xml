@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="PIDAlarm">Alarmes PID</string>
-    <string name="ShowSpeedCamWarrning">Afficher les notification des radars:</string>
-    <string name="Speed_camera_settings">Paramètre Radar</string>
     <string name="a_nobg_only_compl_feel">"Pas d'arrière-plan, arc représentant 100%."</string>
     <string name="app_name">OBD2AA</string>
     <string name="arch_color">"Couleur de l'arc:"</string>
@@ -11,20 +9,14 @@
     <string name="arch_startpos">"L'arc commence à un angle de"</string>
     <string name="arch_width">"Diamètre de l'arc:"</string>
     <string name="audio_w1">Son alerte 1</string>
-    <string name="audio_w1_desc">Notification de la 1ère alerte de distance, la valeur 0 la désactive.</string>
     <string name="audio_w2">Son alerte 2</string>
-    <string name="audio_w2_desc">Notification de la 2ème alerte de distance, la valeur 0 la désactive.</string>
     <string name="audio_w3">Son alerte 3</string>
-    <string name="audio_w3_desc">Notification de la 3ème alerte de distance, la valeur 0 la désactive.</string>
     <string name="autoplaymusic">Lancer la musique au démarrage</string>
     <string name="autostart">"Torque sera lancé au démarrage d'Android Auto:"</string>
     <string name="b_nobg_fullfill">"Pas d'arrière-plan, arc complet."</string>
     <string name="bg_path">Nom du fIchier:</string>
     <string name="bt_hack">Utiliser le Bluetooth pour la sortie audio</string>
     <string name="c_bg_nofill">"Arrière-plan, pas d'arc."</string>
-    <string name="camera_type">Types de radars</string>
-    <string name="camera_type_desc">Types de radars qui génèrent une alerte.</string>
-    <string name="camsam">Activer CamSam/Blitzer.de au démarrage</string>
     <string name="cancel_button_label">Annuler</string>
     <string name="changedpi">Modifier les DPI</string>
     <string name="choose_button_label">Choisir</string>
@@ -99,7 +91,6 @@ Sinon le mode Jour/Nuit est controlé par l'heure de lever et couché du soleil 
     <string name="max_val">Valeur max:</string>
     <string name="media">Media</string>
     <string name="min_val">Valeur min:</string>
-    <string name="mobile_updated">Base de donée de radar mobile mise à jour</string>
     <string name="name">Nom:</string>
     <string name="needle_color">"Couleur de l'aiguille"</string>
     <string name="needle_path">Nom du fIchier:</string>
@@ -112,8 +103,6 @@ Sinon le mode Jour/Nuit est controlé par l'heure de lever et couché du soleil 
 
 Vous devez redémarrer Torque Pro pour utiliser cette application."</string>
     <string name="obd2aa">Obd2aa</string>
-    <string name="other_cam">Autres radars et alertes</string>
-    <string name="perm_desc">"Les alertes de vitessent ne fonctionnent pas sans la permission d'accès aux notifications."</string>
     <string name="perm_req">Permission requise.</string>
     <string name="phone">Téléphone</string>
     <string name="play_sound">Sortie vers le haut-parleur du téléphone</string>
@@ -122,10 +111,8 @@ Vous devez redémarrer Torque Pro pour utiliser cette application."</string>
     <string name="pulling">Autre méthode de récupration des données:</string>
     <string name="rear_left">Pression capteur roue arrière G:</string>
     <string name="rear_right">Pression capteur roue arrière D:</string>
-    <string name="red_cam">Radar de feu rouge</string>
     <string name="rem_fuel">Le niveau de carburant restant est en dessous de: %1$d %2$s</string>
     <string name="search_menu_title">Rechercher</string>
-    <string name="section_cam">Radar de section</string>
     <string name="section_cam_beg">Début de zone de contrôle de vitesse dans</string>
     <string name="section_cam_over">Fin de zone de contrôle de vitesse dans</string>
     <string name="settings">Preferences</string>
@@ -135,36 +122,22 @@ Vous devez redémarrer Torque Pro pour utiliser cette application."</string>
     <string name="show_scale">"Afficher l'échelle:"</string>
     <string name="show_text">Montrer le texte:</string>
     <string name="show_unit">Montrer les unités:</string>
-    <string name="speed_cam">Radar de vitesse</string>
     <string name="speed_hack">Si possible, enlever la restriction à 6 sélections dans les menus</string>
-    <string name="speedcam">Radar dans</string>
-    <string name="speedcam_settings">Paramètres radar</string>
-    <string name="static_updated">Base de donnée des radar fixes mise à jour</string>
     <string name="status_bar_notification_info_overflow">>999</string>
     <string name="storage_perm">Permissions du stockage</string>
-    <string name="storage_perm_desc">"Les permissions d'accès au stockage sont requises pour la base de donnée des radars"</string>
-    <string name="streetcard">Afficher la carte de la rue</string>
     <string name="style">Style</string>
     <string name="temp">Température</string>
     <string name="temp_desc">Utiliser la même unité que celle définie dans Torque.</string>
     <string name="text_color">Couleur du texte:</string>
     <string name="tpms_set_tit">Paramètres TPMS</string>
-    <string name="traffic_cam">Radar de feu dans</string>
     <string name="tunnel">Tunnel dans</string>
-    <string name="update_mobile_freq">Base de donnée de radar mobile</string>
-    <string name="update_mobile_freq_desc">Fréquence de mise à jour de la base de radar mobile</string>
     <string name="use_imperials">Utiliser le système impérial</string>
-    <string name="use_imperials_desc">"Seulement pour la distance du radar.
-La vitesse limite est toujours affichée selon les standard du pays!"</string>
     <string name="use_mobile">Utiliser les données mobiles</string>
-    <string name="use_mobile_desc">"La mise à jour des données ne sera faite qu'en Wifi et lorsque l'application sera lancée."</string>
     <string name="use_warning_text">"Texte de la même couleur que l'arc:"</string>
     <string name="warn1">Alerte niveau 1 atteint (%):</string>
     <string name="warn1_color">"Couleur de l'alerte de niveau 1:"</string>
     <string name="warn2">Alerte niveau 2 atteint (%):</string>
     <string name="warn2_color">"Couleur de l'alerte de niveau 2:"</string>
-    <string name="when_to_display">Distance restante au radar</string>
-    <string name="when_to_display_desc">"Distance d'avertissement d'un radar"</string>
     <string name="wrong_app_action">Veuillez supprimer les applications suivantes avant de continuer</string>
     <string name="wrong_app_header">Applications interdites trouvées!</string>
 </resources>
