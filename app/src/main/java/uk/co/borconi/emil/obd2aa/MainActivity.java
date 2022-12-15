@@ -257,9 +257,6 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(MainActivity.this, R.id.nav_host_fragment_content_main);
         //ToDo Implement menu handling.
 
-        if (id == R.id.speedcam_menu) {
-            navController.navigate(R.id.AppCameraSettings);
-        }
         if (id == R.id.pref_menu) {
             navController.navigate(R.id.PreferenceFragment);
         }

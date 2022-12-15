@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="PIDAlarm">PID Alarme</string>
-    <string name="ShowSpeedCamWarrning">Benachrichtigung für Blitzer anzeigen</string>
-    <string name="Speed_camera_settings">Blitzereinstellungen</string>
     <string name="a_nobg_only_compl_feel">Kein Hintergrund, dynamischer Bogen</string>
 
     <string name="app_name">OBD2AA</string>
@@ -12,18 +10,12 @@
     <string name="arch_startpos">Bogenstartwinkel</string>
     <string name="arch_width">Breite des Bogens:</string>
     <string name="audio_w1">Audio Warnung 1</string>
-    <string name="audio_w1_desc">Entfernung für die erste Audio Warnung (m/yd), zum abschalten auf 0 setzen</string>
     <string name="audio_w2">Audio Warnung 2</string>
-    <string name="audio_w2_desc">Entfernung für die zweite Audio Warnung (m/yd), zum abschalten auf 0 setzen</string>
     <string name="audio_w3">Audio Warnung 3</string>
-    <string name="audio_w3_desc">Entfernung für die dritte Audio Warnung (m/yd), zum abschalten auf 0 setzen</string>
     <string name="autostart">Torque automatisch ausführen</string>
     <string name="b_nobg_fullfill">Kein Hintergrund, kompletter Bogen</string>
     <string name="bg_path">Datei für den Hintergrund</string>
     <string name="c_bg_nofill">Mit Hintergrund, ohne Bogen</string>
-    <string name="camera_type">Blitzerarten</string>
-    <string name="camera_type_desc">Arten von Blitzern, vor welchen gewarnt werden soll</string>
-    <string name="camsam">CamSam/Blitzer.de automatisch ausführen</string>
     <string name="cancel_button_label">Abbrechen</string>
     <string name="choose_button_label">Auswählen</string>
     <string name="clear">Kein Hintergrund, ohne Bogen</string>
@@ -92,7 +84,6 @@ Ausgewählt: Tag- /Nachtansicht wird über die Zeit des Sonnenauf- /Sonnenunterg
     <string name="low_fuel_tit">Tanken!</string>
     <string name="max_val">Max Wert:</string>
     <string name="min_val">Min Wert:</string>
-    <string name="mobile_updated">Mobile Blitzerdatenbank aktualisiert</string>
     <string name="name">Name</string>
     <string name="needle_color">Zeigerfarbe</string>
     <string name="needle_path">Datei für den nadel</string>
@@ -102,8 +93,6 @@ Ausgewählt: Tag- /Nachtansicht wird über die Zeit des Sonnenauf- /Sonnenunterg
  Ist die App auf dem Gerät installiert?
 
 Um diese App zu nutzen, muss Torque Pro installiert sein"</string>
-    <string name="other_cam">Andere Blitzer und Warnungen</string>
-    <string name="perm_desc">Blitzerwarnungen funktionieren nicht ohne Berechtigung für den Benachrichtigungszugriff!</string>
     <string name="perm_req">Berechtigung erforderlich</string>
     <string name="play_sound">Ausgabe über den Telefonlautsprecher</string>
     <string name="pref_title">Einstellungen</string>
@@ -111,10 +100,8 @@ Um diese App zu nutzen, muss Torque Pro installiert sein"</string>
     <string name="pulling">Alternative Methode</string>
     <string name="rear_left">Sensor hinten links</string>
     <string name="rear_right">Sensor hinten rechts</string>
-    <string name="red_cam">Ampelblitzer</string>
     <string name="rem_fuel">Spritmenge unter %1$d %2$s</string>
     <string name="search_menu_title">Suchen</string>
-    <string name="section_cam">Abschnittsmessung</string>
     <string name="section_cam_beg">Abschnittsmessung in</string>
     <string name="section_cam_over">Ende Abschnittsmessung in</string>
     <string name="settings">Einstellungen</string>
@@ -124,33 +111,19 @@ Um diese App zu nutzen, muss Torque Pro installiert sein"</string>
     <string name="show_scale">Skala anzeigen:</string>
     <string name="show_text">Wert anzeigen:</string>
     <string name="show_unit">Einheit anzeigen:</string>
-    <string name="speed_cam">Blitzer</string>
-    <string name="speedcam">Blitzer in</string>
-    <string name="speedcam_settings">Blitzereinstellungen</string>
-    <string name="static_updated">Stationäre Blitzerdatenbank aktualisiert</string>
     <string name="status_bar_notification_info_overflow">999+</string>
     <string name="storage_perm">Speicherberechtigung</string>
-    <string name="storage_perm_desc">Speicherberechtigung wird für die Datenbank benötigt</string>
-    <string name="streetcard">Anzeige der aktuellen Straße als Karte</string>
     <string name="style">Stil</string>
     <string name="temp">Temperatur</string>
     <string name="temp_desc">Optimale Betriebstemperatur (nutzt dieselbe Einheit wie in Torque definiert)</string>
     <string name="text_color">Schriftfarbe:</string>
     <string name="tpms_set_tit">TPMS Einstellungen</string>
-    <string name="traffic_cam">Ampelblitzer in</string>
     <string name="tunnel">Tunnel in</string>
-    <string name="update_mobile_freq">Mobile Blitzer Datenbank</string>
-    <string name="update_mobile_freq_desc">Aktualisierungshäufigkeit der Mobilen Blitzer Datenbank</string>
     <string name="use_imperials">imp. Einheiten nutzen</string>
-    <string name="use_imperials_desc">"Nur für die Distanz zur Kamera.
-Geschwindigkeit wird immer im Landesstandard angezeigt!"</string>
     <string name="use_mobile">Mobile Datenverbindung benutzen</string>
-    <string name="use_mobile_desc">Wenn diese Option ausgeschaltet ist, wird die Blitzerdatenbank nur aktualisiert, wenn die App geöffnet ist und eine WiFi Verbindung besteht</string>
     <string name="use_warning_text">Nutze die Farbe des Bogens auch für den Text:</string>
     <string name="warn1">Warnstufe 1 (in Prozent):</string>
     <string name="warn1_color">Farbe Warnstufe 1:</string>
     <string name="warn2">Warnstufe 2 (in Prozent):</string>
     <string name="warn2_color">Farbe Warnstufe 2:</string>
-    <string name="when_to_display">Entfernung zum Blitzer</string>
-    <string name="when_to_display_desc">Maximale Entfernung um Blitzer anzuzeigen</string>
 </resources>

@@ -23,6 +23,7 @@ import uk.co.borconi.emil.obd2aa.helpers.PreferencesHelper;
 public class Projection extends Presentation {
 
     private final Context context;
+    private final Display display;
 
     private PreferencesHelper prefs;
     private ConstraintLayout contentLayout;
@@ -30,6 +31,7 @@ public class Projection extends Presentation {
     public Projection(Context outerContext, Display display) {
         super(outerContext, display);
         this.context = outerContext;
+        this.display = display;
     }
 
     @Override
@@ -41,11 +43,11 @@ public class Projection extends Presentation {
         if ("AUTO".equalsIgnoreCase(layoutStyle)) {
             setContentView(R.layout.gauge_layout_auto);
             contentLayout = findViewById(R.id.wrapper_layout);
-            DrawGauges.renderAutoLayout(contentLayout, context);
+            DrawGauges.renderAutoLayout(contentLayout, context, display);
         } else {
             setContentView(DrawGauges.getLayoutForStyle(layoutStyle));
             contentLayout = findViewById(R.id.wrapper_layout);
-            DrawGauges.renderSetLayout(contentLayout, context);
+            DrawGauges.renderSetLayout(contentLayout, context, display);
         }
         Log.d("Projection", "Started up correctly");
     }

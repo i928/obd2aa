@@ -56,10 +56,6 @@ public class PreferencesHelper {
         return preferences.getBoolean("alternativepulling", false);
     }
 
-    public boolean shouldShowSpeedCamWarning() {
-        return preferences.getBoolean("ShowSpeedCamWarrning", true);
-    }
-
     public boolean shouldPlaySound() {
         return preferences.getBoolean("play_sound", true);
     }
@@ -97,10 +93,6 @@ public class PreferencesHelper {
         return Integer.parseInt(output);
     }
 
-    public Set<String> getCamTypes() {
-        return preferences.getStringSet("cam_types", new HashSet<>(Arrays.asList("1,2,3,4".split(","))));
-    }
-
     public boolean isNight() {
         return preferences.getBoolean("daynight", false);
     }
@@ -132,6 +124,12 @@ public class PreferencesHelper {
 
     public int getNumberOfGauges() {
         String output = preferences.getString("gauge_counter", "0");
+        return Integer.parseInt(output);
+    }
+
+    public int getAutoLayoutNumberOfRowGauges()
+    {
+        String output = preferences.getString("auto_layout_row_gauges", "4");
         return Integer.parseInt(output);
     }
 

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="PIDAlarm">Alarmas PID</string>
-    <string name="ShowSpeedCamWarrning">Mostrar notificación para cámaras de velocidad</string>
-    <string name="Speed_camera_settings">Ajustes cámara de velocidad</string>
     <string name="a_nobg_only_compl_feel">Sin fondo, contorno de porcentaje.</string>
 
     <string name="app_name">OBD2AA</string>
@@ -12,18 +10,12 @@
     <string name="arch_startpos">Angulo inicio contorno</string>
     <string name="arch_width">Ancho del contorno:</string>
     <string name="audio_w1">Advertencia audio 1</string>
-    <string name="audio_w1_desc">Primera distancia de advertencia de audio (m/yd), configurarlo en 0 para desactivarlo</string>
     <string name="audio_w2">Advertencia de audio 2</string>
-    <string name="audio_w2_desc">Segunda distancia de advertencia de audio (m/yd), configurarlo en 0 para desactivarlo</string>
     <string name="audio_w3">Advertencia de audio 3</string>
-    <string name="audio_w3_desc">Tercera distancia de advertencia de audio (m/yd), configurarlo en 0 para desactivarlo</string>
     <string name="autostart">Inicio automático de Torque en Android Auto</string>
     <string name="b_nobg_fullfill">Sin fondo, contorno completo.</string>
     <string name="bg_path">Archivo fondo</string>
     <string name="c_bg_nofill">Fondo, sin contorno.</string>
-    <string name="camera_type">Tipos de cámara</string>
-    <string name="camera_type_desc">Tipos de cámara que disparan una alerta.</string>
-    <string name="camsam">Lanzar CamSam/Blitzer.de en el inicio</string>
     <string name="clear">Limpiar.</string>
     <string name="common_google_play_services_enable_button">Habilitar</string>
     <string name="common_google_play_services_enable_text">%1$s no funcionará hasta que no habilites Servicios de Google Play.</string>
@@ -87,7 +79,6 @@ Comprobado: el Tema de Día/Noche está controlado por la salida/puesta del sol 
     <string name="low_fuel_tit">COMBUSTIBLE BAJO</string>
     <string name="max_val">Valor max:</string>
     <string name="min_val">Valor min:</string>
-    <string name="mobile_updated">Actualizada base de datos cámara de velocidad</string>
     <string name="name">Nombre</string>
     <string name="needle_color">Color de la aguja</string>
     <string name="needle_path">Aguja archivo</string>
@@ -97,8 +88,6 @@ Comprobado: el Tema de Día/Noche está controlado por la salida/puesta del sol 
  Está la aplicación instalada en su dispositivo?
 
 Usted necesita tener Torque Pro instalado para usar esta aplicación."</string>
-    <string name="other_cam">Otras cámaras y advertencias</string>
-    <string name="perm_desc">Las advertencias de cámara de velocidad no funcionarán sin permiso de acceso a notificación.</string>
     <string name="perm_req">Permisos requeridos.</string>
     <string name="play_sound">Salida en el altavoz del teléfono</string>
     <string name="pref_title">Preferencias</string>
@@ -106,10 +95,8 @@ Usted necesita tener Torque Pro instalado para usar esta aplicación."</string>
     <string name="pulling">Obtención alternativa de datos</string>
     <string name="rear_left">Sensor de presión trasero izquierdo:</string>
     <string name="rear_right">Sensor de presión trasero derecho:</string>
-    <string name="red_cam">Cámara de semáforo</string>
     <string name="rem_fuel">Nivel de combustible restante a continuación %1$d %2$s</string>
     <string name="search_menu_title">Buscar</string>
-    <string name="section_cam">Sección (Velocidad promedio) Cámara</string>
     <string name="section_cam_beg">Inicio promedio control de velocidad</string>
     <string name="section_cam_over">Fin promedio control de velocidad</string>
     <string name="settings">Preferencias</string>
@@ -119,32 +106,19 @@ Usted necesita tener Torque Pro instalado para usar esta aplicación."</string>
     <string name="show_scale">Mostrar escala:</string>
     <string name="show_text">Mostrar texto:</string>
     <string name="show_unit">Mostrar unidad:</string>
-    <string name="speed_cam">Cámara de velocidad</string>
-    <string name="speedcam">Cámara de velocidad en</string>
-    <string name="speedcam_settings">Ajustes cámara de velocidad</string>
-    <string name="static_updated">Actualizada base de datos cámara de velocidad estática</string>
     <string name="status_bar_notification_info_overflow">+999</string>
     <string name="storage_perm">Permiso Almacenamiento</string>
-    <string name="storage_perm_desc">Permiso de almacenamiento requerido ,para la base de datos</string>
-    <string name="streetcard">Mostrar tarjeta de calle actual</string>
     <string name="style">Estilo</string>
     <string name="temp">Temperatura</string>
     <string name="temp_desc">Valor temperatura de servicio (usar la misma unidad que en Torque).</string>
     <string name="text_color">Color del texto:</string>
     <string name="tpms_set_tit">Ajustes TPMS</string>
-    <string name="traffic_cam">Cámara de semáforo en</string>
     <string name="tunnel">Túnel en</string>
-    <string name="update_mobile_freq">Cámara base de datos móvil</string>
-    <string name="update_mobile_freq_desc">Frecuencia de actualización de la base de datos móvil</string>
     <string name="use_imperials">Usar unidades imperiales</string>
-    <string name="use_imperials_desc">Solo para la distancia a la cámara.limite de velocidad siempre se muestra en el estándar del país!</string>
     <string name="use_mobile">Usa datos móviles</string>
-    <string name="use_mobile_desc">Si esta opción está desactivada, la base de datos de la cámarade velocidad solo se actualizará cuando la aplicación se esté ejecutando y usted esté conectado al Wifi.</string>
     <string name="use_warning_text">Usar el color del contorno para el texto.</string>
     <string name="warn1">Advertencia nivel 1 (porcentaje):</string>
     <string name="warn1_color">Color de advertencia 1:</string>
     <string name="warn2">Advertencia nivel 2 (porcentaje):</string>
     <string name="warn2_color">Color de advertencia 2:</string>
-    <string name="when_to_display">Distancia a la cámara</string>
-    <string name="when_to_display_desc">Distancia máxima para visualizar la cámara de velocidad</string>
 </resources>

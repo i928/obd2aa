@@ -3,9 +3,7 @@ package uk.co.borconi.emil.obd2aa.services;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.Context.UI_MODE_SERVICE;
-import static uk.co.borconi.emil.obd2aa.helpers.SunSet.Calculate_Sunset_Sunrise;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.app.UiModeManager;
@@ -16,16 +14,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.graphics.Typeface;
 import android.location.Location;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,24 +24,12 @@ import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
 
-import androidx.core.app.ActivityCompat;
-
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.SphericalUtil;
-
 import org.greenrobot.eventbus.EventBus;
 import org.prowl.torque.remote.ITorqueService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
@@ -59,13 +37,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import uk.co.borconi.emil.obd2aa.R;
 import uk.co.borconi.emil.obd2aa.androidauto.OBD2AA;
 import uk.co.borconi.emil.obd2aa.gauge.GaugeUpdate;
-import uk.co.borconi.emil.obd2aa.helpers.CameraDataBaseHelper;
-import uk.co.borconi.emil.obd2aa.helpers.DownloadHelper;
-import uk.co.borconi.emil.obd2aa.helpers.NearbyCameras;
 import uk.co.borconi.emil.obd2aa.helpers.PreferencesHelper;
 import uk.co.borconi.emil.obd2aa.helpers.UnitConvertHelper;
-import uk.co.borconi.emil.obd2aa.helpers.isCameraInWay;
-import uk.co.borconi.emil.obd2aa.helpers.myGeoDecoder;
 import uk.co.borconi.emil.obd2aa.pid.PIDToFetch;
 
 
@@ -76,43 +49,26 @@ import uk.co.borconi.emil.obd2aa.pid.PIDToFetch;
 
 public class OBD2Background {
 
-    public static boolean isdebugging;
-    static volatile boolean isrunning;
+    public static boolean isDebugging;
+    static volatile boolean isRunning;
     private final Context context;
-    private final OBD2AA mOBD2AA = null;
-    private final List<PIDToFetch> pidtofetch = new ArrayList<>();
+    private final List<PIDToFetch> pidToFetch = new ArrayList<>();
     private final Handler handler = new Handler(Looper.getMainLooper());
-    public boolean ecuconnected = true;
+    public boolean ecuConnected = true;
     NotificationManager mNotifyMgr;
     private ITorqueService torqueService;
     private String[] pids;
     private PreferencesHelper prefs;
     private SharedPreferences.Editor editor;
     private String[] units;
-    private boolean alternativepulling;
-    private boolean firstfecth = true;
+    private boolean alternativePulling;
+    private boolean firstFetch = true;
     private boolean mBind = false;
-    private int nightMode = 0;
-    private long lastcalc = 0;
     private UiModeManager mUimodemanager = null;
-    private CameraDataBaseHelper staticDB;
-    private CameraDataBaseHelper mobileDB;
-    private boolean isSpeedCamShowing;
-    private boolean ShowSpeedCamWarrning;
-    private boolean playSound;
     private boolean isDemoMode;
-    private Paint textpaint;
-    private Paint paint;
-    private RectF rectF;
     private int audio_1, audio_2, audio_3, visual_display;
     private boolean useImperial;
-    private myGeoDecoder mgeodecoder;
 
-    private NearbyCameras prevCamera;
-    private boolean streetcard;
-    private ExecutorService geodecoderexecutor;
-    private int CameraRefreshFreq;
-    private String mobile_filter, static_filter;
     private ServiceConnection connection = new ServiceConnection() {
         public void onServiceConnected(ComponentName arg0, IBinder service) {
             Log.d("HU", "SERVICE CONNECTED!");
@@ -140,12 +96,6 @@ public class OBD2Background {
             Log.d("OBD2AA", "Receiver : " + intent.getAction());
 
             //Intent localIntent = new Intent(getApplicationContext(), MyOdbService.class);
-            if (intent.getAction().equalsIgnoreCase("stop.camera.uk.co.boconi.emil.obd2aa")) {
-                if (prevCamera.getid() == torqueAlarm.getInt("camerid", 0)) {
-                    prevCamera.setShownot(true);
-                }
-                return;
-            }
             String text;
             if (torqueAlarm.getString("ALARM_TYPE").equalsIgnoreCase("MIN")) {
                 text = "Current value " + String.format("%.2f", torqueAlarm.getDouble("CURRENT_VALUE")) + " " + torqueAlarm.getString("UNIT") + " is lower than: " + String.format("%.2f", torqueAlarm.getDouble("TRIGGER_VALUE")) + " " + torqueAlarm.getString("UNIT");
@@ -169,28 +119,12 @@ public class OBD2Background {
     }
 
     public void onCreate() {
-        staticDB = new CameraDataBaseHelper(context, 2, "fixedcamera");
-        mobileDB = new CameraDataBaseHelper(context, 1, "mobilecamera");
         prefs = PreferencesHelper.getPreferences(context);
         mNotifyMgr = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         editor = prefs.edit();
-        mgeodecoder = new myGeoDecoder(context);
-        textpaint = new Paint();
-        textpaint.setARGB(255, 0, 0, 0);
-        textpaint.setTextAlign(Paint.Align.CENTER);
-        textpaint.setTextSize(110);
-        textpaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        rectF = new RectF();
-        rectF.set(16, 16, 240, 240);
-        geodecoderexecutor = Executors.newSingleThreadExecutor();
-        paint = new Paint();
-        ShowSpeedCamWarrning = prefs.shouldShowSpeedCamWarning();
-        Log.d("OBD2AA", "ShowSpeedCamWarrning: " + ShowSpeedCamWarrning);
-        playSound = prefs.shouldPlaySound();
         isDemoMode = prefs.isInDemoMode();
         useImperial = prefs.shouldUseImperial();
         int gaugeNumber = prefs.getNumberOfGauges();
-        streetcard = prefs.shouldHaveStreetCard();
         audio_1 = prefs.getAudio1();
         audio_2 = prefs.getAudio2();
         audio_3 = prefs.getAudio3();
@@ -202,38 +136,11 @@ public class OBD2Background {
             audio_3 = (int) Math.round(audio_3 / 1.09361);
             visual_display = (int) Math.round(visual_display / 1.09361);
         }
-        Set<String> selections = prefs.getCamTypes();
-        if (selections.size() == 4) {
-            mobile_filter = "";
-            static_filter = "";
-        } else {
-            mobile_filter = "and type not in (";
-            static_filter = "and type not in (";
-            if (!selections.contains("1")) {
-                mobile_filter = mobile_filter + "1,";
-                static_filter = static_filter + "7,";
-            }
-            if (!selections.contains("2")) {
-                mobile_filter = mobile_filter + "2,";
-                static_filter = static_filter + "11,10,";
-            }
-            if (!selections.contains("3")) {
-                static_filter = static_filter + "12,13,";
-            }
-            if (!selections.contains("4")) {
-                mobile_filter = mobile_filter + "0,3,4,5,6,";
-                static_filter = static_filter + "1,2,3,4,5,6,8,9,14,15,";
-            }
-            mobile_filter = mobile_filter.substring(0, mobile_filter.length() - 1) + ")";
-            static_filter = static_filter.substring(0, static_filter.length() - 1) + ")";
-
-        }
 
         pids = new String[gaugeNumber];
         units = new String[gaugeNumber];
-        CameraRefreshFreq = prefs.getUpdateFrequency();
-        isdebugging = prefs.isDebugging();
-        alternativepulling = prefs.hasAlternativePulling();
+        isDebugging = prefs.isDebugging();
+        alternativePulling = prefs.hasAlternativePulling();
         for (int i = 1; i <= gaugeNumber; i++) {
             pids[i - 1] = prefs.getPidForGauge(i);
             units[i - 1] = prefs.getUnitForGauge(i);
@@ -244,7 +151,6 @@ public class OBD2Background {
 
         IntentFilter filter = new IntentFilter();
         filter.addAction("org.prowl.torque.ALARM_TRIGGERED");
-        filter.addAction("stop.camera.uk.co.boconi.emil.obd2aa");
         context.registerReceiver(receiver, filter);
 
         /* Register Torque Service only if autostart is enabled */
@@ -254,57 +160,12 @@ public class OBD2Background {
         }*/
 
         dataFetcher();
-        if ((!prefs.isNight() && (!ShowSpeedCamWarrning)) || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-        } else {
-            Log.d("OBD2AA", "Registering location listener...");
-            FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
-            LocationRequest mLocationRequest = new LocationRequest();
-            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-
-            if (ShowSpeedCamWarrning) {                  //Polling speed depends on setting, only poll faster if we need to detect speed camera.
-                mLocationRequest.setInterval(1000);
-                mLocationRequest.setFastestInterval(1000);
-                new DownloadHelper(1, context, CameraRefreshFreq);
-                refreshMobile();
-
-            } else
-                mLocationRequest.setInterval(60 * 1000);
-
-
-            // Create LocationSettingsRequest object using location request
-            LocationSettingsRequest.Builder LocationRequestBuilder = new LocationSettingsRequest.Builder();
-            LocationRequestBuilder.addLocationRequest(mLocationRequest);
-
-
-            // new Google API SDK v11 uses getFusedLocationProviderClient(this)
-            mFusedLocationClient.requestLocationUpdates(mLocationRequest, new LocationCallback() {
-                        @Override
-                        public void onLocationResult(LocationResult locationResult) {
-                            // do work here
-                            try {
-                                onLocationChanged(locationResult.getLastLocation());
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    },
-                    Looper.myLooper());
-
-            mUimodemanager = (UiModeManager) context.getSystemService(UI_MODE_SERVICE);
-        }
+        mUimodemanager = (UiModeManager) context.getSystemService(UI_MODE_SERVICE);
     }
 
     public void onDestroy() {
         Log.d("OBD2AA", "OBD2 Background Service on Destroy");
-        isrunning = false;
+        isRunning = false;
         if (mBind) {
             context.unbindService(connection);
         }
@@ -323,9 +184,9 @@ public class OBD2Background {
     }
 
     private void dataFetcher() {
-        final String[] fuelpid = {prefs.watchFuel(), prefs.coolantPid()};
+        final String[] fuelPid = {prefs.watchFuel(), prefs.coolantPid()};
 
-        isrunning = true;
+        isRunning = true;
         Log.d("OBD2AA", "Data fetcher started....");
         Thread thread = new Thread() {
             /* JADX WARNING: No exception handlers in catch block: Catch:{  } */
@@ -335,25 +196,22 @@ public class OBD2Background {
                 char c;
                 double d;
                 try {
-                    while (OBD2Background.isrunning) {
-                        if (!(!prefs.isNight() || mUimodemanager == null || mUimodemanager.getNightMode() == nightMode)) {
-                            mUimodemanager.setNightMode(nightMode);
-                        }
+                    while (OBD2Background.isRunning) {
                         if (torqueService != null) {
-                            if (!ecuconnected) {
+                            if (!ecuConnected) {
                                 try {
                                     if (torqueService.isConnectedToECU()) {
-                                        ecuconnected = true;
+                                        ecuConnected = true;
                                     }
                                 } catch (RemoteException unused) {
                                 }
-                            } else if (firstfecth) {
-                                firstfecth = false;
+                            } else if (firstFetch) {
+                                firstFetch = false;
                                 sortPids();
-                            } else if (!alternativepulling) {
-                                List asList = Arrays.asList(pids);
+                            } else if (!alternativePulling) {
+                                List pidsAsList = Arrays.asList(pids);
                                 float[] pIDValues = torqueService.getPIDValues(pids);
-                                if (OBD2Background.isdebugging) {
+                                if (OBD2Background.isDebugging) {
                                     StringBuilder sb = new StringBuilder();
                                     sb.append("Pids requested: ");
                                     sb.append(Arrays.toString(pids));
@@ -364,8 +222,8 @@ public class OBD2Background {
                                     Log.d("OBD2-APP", sb2.toString());
                                 }
                                 long[] pIDUpdateTime = torqueService.getPIDUpdateTime(pids);
-                                for (PIDToFetch pIDToFetch : pidtofetch) {
-                                    int indexOf = asList.indexOf(pIDToFetch.getSinglePid());
+                                for (PIDToFetch pIDToFetch : pidToFetch) {
+                                    int indexOf = pidsAsList.indexOf(pIDToFetch.getSinglePid());
                                     if (indexOf == 0 || pIDValues[indexOf] != pIDValues[indexOf - 1]) {
                                         if (isDemoMode) {
                                             if (pIDToFetch.getLastvalue() == 0.0d) {
@@ -383,7 +241,7 @@ public class OBD2Background {
                                             pIDToFetch.putLastFetch(pIDUpdateTime[indexOf]);
 
                                             if (pIDToFetch.getNeedsConversion()) {
-                                                if (OBD2Background.isdebugging) {
+                                                if (OBD2Background.isDebugging) {
                                                     StringBuilder sb3 = new StringBuilder();
                                                     sb3.append("PID BEFORE CONVERSION");
                                                     sb3.append(pIDToFetch.getPID()[0]);
@@ -407,7 +265,7 @@ public class OBD2Background {
                                                 EventBus.getDefault().post(update);
                                             }
 
-                                            if (OBD2Background.isdebugging) {
+                                            if (OBD2Background.isDebugging) {
                                                 StringBuilder sb5 = new StringBuilder();
                                                 sb5.append("PID   ");
                                                 sb5.append(pIDToFetch.getPID()[0]);
@@ -425,41 +283,13 @@ public class OBD2Background {
                                 i = 100;
                                 Thread.sleep(i);
                             } else {
-                                for (PIDToFetch pIDToFetch2 : pidtofetch) {
+                                for (PIDToFetch pIDToFetch2 : pidToFetch) {
                                     float[] fArr = {0.0f};
                                     fArr[0] = torqueService.getValueForPid(Integer.parseInt(pIDToFetch2.getPID()[0].split(",")[0], 16), true);
                                     long[] pIDUpdateTime2 = torqueService.getPIDUpdateTime(pIDToFetch2.getPID());
                                     if (!(pIDUpdateTime2[0] == pIDToFetch2.getLastFetch() || pIDUpdateTime2[0] == 0)) {
                                         pIDToFetch2.putLastFetch(pIDUpdateTime2[0]);
-                                        if (mOBD2AA != null) {
-                                            if (pIDToFetch2.getNeedsConversion()) {
-                                                c = 0;
-                                                fArr[0] = UnitConvertHelper.ConvertValue(fArr[0], pIDToFetch2.getUnit());
-                                            } else {
-                                                c = 0;
-                                            }
-                                            if (fArr[c] > pIDToFetch2.getMaxValue() && !pIDToFetch2.getPID()[c].equalsIgnoreCase("ff1201") && !pIDToFetch2.getPID()[c].equalsIgnoreCase("ff1203") && !pIDToFetch2.getPID()[c].equalsIgnoreCase("ff1207")) {
-                                                pIDToFetch2.setMaxValue((float) Math.round(fArr[c]));
-
-                                                if (EventBus.getDefault().hasSubscriberForEvent(GaugeUpdate.class))
-                                                    EventBus.getDefault().post(new GaugeUpdate(pIDToFetch2.getGaugeNumber(), pIDToFetch2.getMaxValue(), true, false));
-
-
-                                                StringBuilder sb6 = new StringBuilder();
-                                                sb6.append("Need to update Gauge_");
-                                                sb6.append(pIDToFetch2.getGaugeNumber() + 1);
-                                                sb6.append("Max val: ");
-                                                sb6.append(Math.round(fArr[0]));
-                                                sb6.append("Stored: ");
-                                                sb6.append(pIDToFetch2.getMaxValue());
-                                                Log.d("OBD2AA", sb6.toString());
-                                            }
-                                            if (EventBus.getDefault().hasSubscriberForEvent(GaugeUpdate.class))
-                                                EventBus.getDefault().post(new GaugeUpdate(pIDToFetch2.getGaugeNumber(), fArr[0]));
-
-
-                                        }
-                                        if (OBD2Background.isdebugging) {
+                                        if (OBD2Background.isDebugging) {
                                             StringBuilder sb7 = new StringBuilder();
                                             sb7.append("PID   ");
                                             sb7.append(pIDToFetch2.getPID()[0]);
@@ -482,7 +312,7 @@ public class OBD2Background {
                             }
                     }
                     Log.d("OBS2AA", "Running StopSelf...");
-                    OBD2Background.isrunning = false;
+                    OBD2Background.isRunning = false;
                     if (mBind) {
                         mBind = false;
                     }
@@ -512,7 +342,7 @@ public class OBD2Background {
                 boolean first = true;
                 boolean warm_engine = false;
                 int warm_engine_degree = prefs.getCoolantWarningValue();
-                while (isrunning) {
+                while (isRunning) {
                     if (torqueService != null) {
                         if (first) {
                             first = false;
@@ -527,25 +357,25 @@ public class OBD2Background {
                         try {
 
                             if (prefs.shouldMonitorFuel()) {  //If we should monitor fuel
-                                int fuelval = Math.round(torqueService.getPIDValues(fuelpid)[0]);
-                                if ((fuelval < 80) && (fuelpid[0].equalsIgnoreCase("ff126a")) || fuelval < 5) {
-                                    if (lastwarningvalue != fuelval) {
+                                int fuelVal = Math.round(torqueService.getPIDValues(fuelPid)[0]);
+                                if ((fuelVal < 80) && (fuelPid[0].equalsIgnoreCase("ff126a")) || fuelVal < 5) {
+                                    if (lastwarningvalue != fuelVal) {
                                         String warrning = "";
-                                        if (fuelpid[0].equalsIgnoreCase("ff126a")) {
+                                        if (fuelPid[0].equalsIgnoreCase("ff126a")) {
                                             if (miles)
-                                                // warrning = "Estimated fuel range is only: " + Math.round(fuelval / 1.60) + " miles.";
-                                                warrning = context.getString(R.string.est_range, Math.round(fuelval / 1.60), " miles");
+                                                // warrning = "Estimated fuel range is only: " + Math.round(fuelVal / 1.60) + " miles.";
+                                                warrning = context.getString(R.string.est_range, Math.round(fuelVal / 1.60), " miles");
                                             else
-                                                warrning = context.getString(R.string.est_range, fuelval, " km");
+                                                warrning = context.getString(R.string.est_range, fuelVal, " km");
                                         } else
-                                            warrning = context.getString(R.string.rem_fuel, fuelval, " %");
-                                        lastwarningvalue = fuelval;
+                                            warrning = context.getString(R.string.rem_fuel, fuelVal, " %");
+                                        lastwarningvalue = fuelVal;
                                         showNotification(context.getResources().getString(R.string.low_fuel_tit), warrning, R.drawable.ic_danger_r, R.drawable.fuel);
                                     }
                                 }
                             }
                             if (prefs.shouldMonitorCoolant()) { //If we should monitor coolant
-                                float coolantval = torqueService.getPIDValues(fuelpid)[1];
+                                float coolantval = torqueService.getPIDValues(fuelPid)[1];
                                 if (!celsius)
                                     coolantval = UnitConvertHelper.ConvertValue(coolantval, "°C");
 
@@ -635,7 +465,7 @@ public class OBD2Background {
                         editor.apply();
                     }
                 }
-                pidtofetch.add(new PIDToFetch(pids[i], true, 0, i, units[i], needsconversion, prefs.getMaxValueForGauge(i + 1), prefs.getMinValueForGauge(i + 1)));
+                pidToFetch.add(new PIDToFetch(pids[i], true, 0, i, units[i], needsconversion, prefs.getMaxValueForGauge(i + 1), prefs.getMinValueForGauge(i + 1)));
             }
         } catch (RemoteException e) {
             throw new RuntimeException(e);
@@ -695,152 +525,5 @@ public class OBD2Background {
         mNotifyMgr.notify(1984,mynot.build());
 
 */
-    }
-
-    protected void showNotification(String Title, String Subtitle, int actionicon, Bitmap thumbnail, int cameraid) {
-/*
-        CarToast.makeText(getBaseContext(), Title+" "+Subtitle, Toast.LENGTH_LONG).show();
-
-        NotificationManager mNotifyMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        String NOTIFICATION_CHANNEL_ID = "speedcam_not_channel";
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications", NotificationManager.IMPORTANCE_DEFAULT);
-
-            // Configure the notification channel.
-            notificationChannel.setDescription("Channel used for Speed cameras");
-            mNotifyMgr.createNotificationChannel(notificationChannel);
-        }
-
-        Intent intent = new Intent(this, OBD2_Background.class);
-        intent.setAction("stop.camera.uk.co.boconi.emil.obd2aa");
-        intent.putExtra("camerid",cameraid);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, 0);
-
-        CarNotificationExtender paramString2 = new CarNotificationExtender.Builder()
-                .setTitle(Title)
-                .setSubtitle(Subtitle)
-                .setShouldShowAsHeadsUp(true)
-                .setActionIconResId(actionicon)
-                .setBackgroundColor(Color.WHITE)
-                .setNightBackgroundColor(Color.DKGRAY)
-                .setThumbnail(thumbnail)
-
-                .build();
-
-        NotificationCompat.Builder mynot = new NotificationCompat.Builder(this,NOTIFICATION_CHANNEL_ID)
-                .setContentTitle(Title)
-                .setContentText(Subtitle)
-                .setLargeIcon(thumbnail)
-                .setSmallIcon(actionicon)
-                .extend(paramString2);
-
-        mynot.setContentIntent(pendingIntent).setDeleteIntent(pendingIntent);
-
-        mNotifyMgr.notify(1985,mynot.build());
-*/
-
-    }
-
-    public void onLocationChanged(final Location location) {
-        if (location.getAccuracy() > 35) {  //Ignore any location whith accuracy less than 35 meters.
-            return;
-        }
-        accumulated_distance += SphericalUtil.computeDistanceBetween(new LatLng(location.getLatitude(), location.getLongitude()), new LatLng(lastlocation.getLatitude(), lastlocation.getLongitude()));
-        lastlocation = location;
-        Log.d("HU-Location", "Curr location: " + location);
-        if (!isSpeedCamShowing && streetcard && ((lastcardupdate < System.currentTimeMillis() - 5000 && accumulated_distance >= 200))) { // || bearingdiff>60))
-            geodecoderexecutor.submit(() -> {
-                try {
-                    mgeodecoder.dedoceaddress(location);
-                    synchronized (this) {
-                        lastcardupdate = System.currentTimeMillis();
-                        accumulated_distance = 0;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-
-
-        if (ShowSpeedCamWarrning) {
-            NearbyCameras camera = null;
-
-            if (prevCamera != null && isCameraInWay.stillinRange(location, prevCamera, visual_display))
-                camera = prevCamera;
-            else {
-                isCameraInWay iscamera = new isCameraInWay(location, mobileDB, staticDB, visual_display, mobile_filter, static_filter);
-                if (iscamera.getCamera() != null) {
-                    camera = iscamera.getCamera();
-                }
-            }
-            //Log.d("OBD2AA","Camera is: " + camera);
-            if (camera != null) {
-                prevCamera = camera;
-                int[] resources = camera.geticon();
-                Bitmap bmp;
-                if (resources[2] == 1) {
-                    bmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.traffic_light);
-                } else {
-                    bmp = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
-                    Canvas canvas = new Canvas(bmp);
-                    paint.setColor(Color.WHITE);
-                    paint.setStyle(Paint.Style.FILL);
-                    canvas.drawArc(rectF, 0, 360, false, paint);
-                    paint.setStrokeWidth(24);
-                    paint.setStyle(Paint.Style.STROKE);
-                    paint.setColor(Color.RED);
-                    canvas.drawArc(rectF, 0, 360, false, paint);
-                    canvas.drawText(camera.getspeed(), 128, (128 - ((textpaint.descent() + textpaint.ascent()) / 2)), textpaint);
-                }
-                if (camera.getShownot()) {
-                    if (useImperial) {
-                        showNotification(context.getString(resources[1]) + " " + Math.round(camera.getDistaceToCam() * 1.0936) + " yd", camera.getstreet(), resources[0], bmp, camera.getid());
-                    } else {
-                        showNotification(context.getString(resources[1]) + " " + camera.getDistaceToCam() + " m", camera.getstreet(), resources[0], bmp, camera.getid());
-                    }
-                }
-
-                int sound_to_play = 0;
-                if (camera.getDistaceToCam() > audio_2 && camera.getDistaceToCam() <= audio_1 && !camera.getShow_warrning(0)) {
-                    sound_to_play = R.raw.beep;
-                    camera.setShow_warrning(0, true);
-                }
-                if (camera.getDistaceToCam() > audio_3 && camera.getDistaceToCam() <= audio_2 && !camera.getShow_warrning(1)) {
-                    sound_to_play = R.raw.beepbeep;
-                    camera.setShow_warrning(1, true);
-                }
-                if (camera.getDistaceToCam() <= audio_3 && !camera.getShow_warrning(2)) {
-                    sound_to_play = R.raw.beepbeepbeep;
-                    camera.setShow_warrning(2, true);
-                }
-                if (playSound) {
-                    MediaPlayer mp = MediaPlayer.create(context, sound_to_play);
-                    mp.start();
-                }
-
-                isSpeedCamShowing = true;
-            } else if (isSpeedCamShowing) {
-                Log.d("OBD2AA", "Removing speed camera notification...");
-                mNotifyMgr.cancel(1985);
-                isSpeedCamShowing = false;
-                prevCamera = null;
-            }
-        }
-
-        if ((System.currentTimeMillis() - lastcalc) > 600000) {
-            lastcalc = System.currentTimeMillis();
-            nightMode = Calculate_Sunset_Sunrise(location);
-        }
-    }
-
-    private void refreshMobile() {
-        handler.postDelayed(() -> {
-            if (isdebugging)
-                Log.d("OBD2AA", "Refreshing the mobile database");
-            new DownloadHelper(1, context, CameraRefreshFreq);
-            refreshMobile();
-        }, 60000);
     }
 }

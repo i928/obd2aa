@@ -18,13 +18,15 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
+import uk.co.borconi.emil.obd2aa.Constants;
+
 /**
  * Created by Emil on 12/08/2017.
  * <p>
  * Created by bruce on 11/6/14.
  */
-public class ArcProgress extends View {
-
+public class ArcProgress extends View
+{
     private static final String INSTANCE_STATE = "saved_instance";
     private static final String INSTANCE_STROKE_WIDTH = "stroke_width";
     private static final String INSTANCE_SUFFIX_TEXT_SIZE = "suffix_text_size";
@@ -65,8 +67,8 @@ public class ArcProgress extends View {
     private float min;
     private int finishedStrokeColor;
     private int unfinishedStrokeColor;
-    private int low1color;
-    private int low2color;
+    private int low1Color;
+    private int low2Color;
     private float warn1;
     private float warn2;
     private boolean isReverse;
@@ -85,12 +87,12 @@ public class ArcProgress extends View {
     private boolean useGradientColor = false;
     private RectF oval = new RectF();
     private SweepGradient gradient;
-    private int myradius;
+    private int myRadius;
     private float cx;
     private int x;
-    private int needlecolor = -1;
+    private int needleColor = -1;
     private int indent = 0;
-    private float startposition = 270;
+    private float startPosition = 270;
 
     public ArcProgress(Context context) {
         this(context, null);
@@ -100,7 +102,8 @@ public class ArcProgress extends View {
         this(context, attrs, 0);
     }
 
-    public ArcProgress(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ArcProgress(Context context, AttributeSet attrs, int defStyleAttr)
+    {
         super(context, attrs, defStyleAttr);
 
         defaultTextSize = Utils.sp2px(getResources(), 18);
@@ -117,10 +120,11 @@ public class ArcProgress extends View {
         initPainters();
     }
 
-    protected void initByAttributes(TypedArray attributes) {
+    protected void initByAttributes(TypedArray attributes)
+    {
         finishedStrokeColor = attributes.getColor(R.styleable.ArcProgress_arc_finished_color, Color.WHITE);
-        low1color = attributes.getColor(R.styleable.ArcProgress_low1_color, defaultLow1Color);
-        low2color = attributes.getColor(R.styleable.ArcProgress_low2_color, defaultLow2Color);
+        low1Color = attributes.getColor(R.styleable.ArcProgress_low1_color, defaultLow1Color);
+        low2Color = attributes.getColor(R.styleable.ArcProgress_low2_color, defaultLow2Color);
         unfinishedStrokeColor = attributes.getColor(R.styleable.ArcProgress_arc_unfinished_color, defaultUnfinishedColor);
         textColor = attributes.getColor(R.styleable.ArcProgress_arc_text_color, defaultTextColor);
         textSize = attributes.getDimension(R.styleable.ArcProgress_arc_text_size, defaultTextSize);
@@ -129,10 +133,10 @@ public class ArcProgress extends View {
         warn2 = attributes.getInt(R.styleable.ArcProgress_warn2, 85);
         isReverse = attributes.getBoolean(R.styleable.ArcProgress_isReverse, false);
         showArc = attributes.getBoolean(R.styleable.ArcProgress_showArc, true);
-        showText = attributes.getBoolean(R.styleable.ArcProgress_showtext, true);
+        showText = attributes.getBoolean(R.styleable.ArcProgress_showtext, false);
         showNeedle = attributes.getBoolean(R.styleable.ArcProgress_showNeedle, true);
         showDecimal = attributes.getBoolean(R.styleable.ArcProgress_showNeedle, false);
-        showUnit = attributes.getBoolean(R.styleable.ArcProgress_showNeedle, true);
+        showUnit = attributes.getBoolean(R.styleable.ArcProgress_showNeedle, false);
         setMax(attributes.getInt(R.styleable.ArcProgress_arc_max, 100));
         setMin(attributes.getInt(R.styleable.ArcProgress_arc_min, 0));
         setGaugeStyle(attributes.getInt(R.styleable.ArcProgress_gaugestyle, 0));
@@ -145,7 +149,8 @@ public class ArcProgress extends View {
         bottomText = attributes.getString(R.styleable.ArcProgress_arc_bottom_text) == null ? "" : attributes.getString(R.styleable.ArcProgress_arc_bottom_text);
     }
 
-    protected void initPainters() {
+    protected void initPainters()
+    {
         textPaint = new TextPaint();
         textPaint.setColor(textColor);
         textPaint.setTextSize(textSize);
@@ -160,7 +165,8 @@ public class ArcProgress extends View {
     }
 
     @Override
-    public void invalidate() {
+    public void invalidate()
+    {
         initPainters();
         super.invalidate();
     }
@@ -169,77 +175,91 @@ public class ArcProgress extends View {
         return strokeWidth;
     }
 
-    public void setStrokeWidth(float strokeWidth) {
+    public void setStrokeWidth(float strokeWidth)
+    {
         this.strokeWidth = strokeWidth;
         this.invalidate();
     }
 
-    public void setNeedlecolor(int color) {
-        needlecolor = color;
+    public void setNeedleColor(int color) {
+        needleColor = color;
     }
 
-    public void setIndent(int indent) {
+    public void setIndent(int indent)
+    {
         this.indent = indent;
         this.invalidate();
     }
 
-    public void setStartposition(int startposition) {
-        this.startposition = startposition;
+    public void setStartPosition(int startPosition)
+    {
+        this.startPosition = startPosition;
         this.invalidate();
     }
 
-    public void setShowArc(boolean showArc) {
+    public void setShowArc(boolean showArc)
+    {
         this.showArc = showArc;
         this.invalidate();
     }
 
-    public void setShowText(boolean setShowText) {
+    public void setShowText(boolean setShowText)
+    {
         this.showText = setShowText;
         this.invalidate();
     }
 
-    public void setNeedleBitmap(Bitmap needle) {
+    public void setNeedleBitmap(Bitmap needle)
+    {
         this.needleBitmap = needle;
         this.invalidate();
     }
 
-    public void setShowNeedle(boolean setShowNeedle) {
+    public void setShowNeedle(boolean setShowNeedle)
+    {
         this.showNeedle = setShowNeedle;
         this.invalidate();
     }
 
-    public void setShowUnit(boolean setShowUnit) {
+    public void setShowUnit(boolean setShowUnit)
+    {
         this.showUnit = setShowUnit;
         this.invalidate();
     }
 
-    public void setShowDecimal(boolean setShowDecimal) {
+    public void setShowDecimal(boolean setShowDecimal)
+    {
         this.showDecimal = setShowDecimal;
         this.invalidate();
     }
 
-    public void setisReverse(boolean setisReverse) {
+    public void setisReverse(boolean setisReverse)
+    {
         this.isReverse = setisReverse;
         this.invalidate();
     }
 
-    public void setWarn1(float warn1) {
+    public void setWarn1(float warn1)
+    {
         this.warn1 = warn1;
         this.invalidate();
     }
 
-    public void setWarn2(float warn2) {
+    public void setWarn2(float warn2)
+    {
         this.warn2 = warn2;
         this.invalidate();
     }
 
-    public void setwarn1color(int unfinishedStrokeColor) {
-        this.low1color = unfinishedStrokeColor;
+    public void setWarn1Color(int unfinishedStrokeColor)
+    {
+        this.low1Color = unfinishedStrokeColor;
         this.invalidate();
     }
 
-    public void setwarn2color(int unfinishedStrokeColor) {
-        this.low2color = unfinishedStrokeColor;
+    public void setWarn2Color(int unfinishedStrokeColor)
+    {
+        this.low2Color = unfinishedStrokeColor;
         this.invalidate();
     }
 
@@ -247,7 +267,8 @@ public class ArcProgress extends View {
         return suffixTextSize;
     }
 
-    public void setSuffixTextSize(float suffixTextSize) {
+    public void setSuffixTextSize(float suffixTextSize)
+    {
         this.suffixTextSize = suffixTextSize;
         this.invalidate();
     }
@@ -256,7 +277,8 @@ public class ArcProgress extends View {
         return bottomText;
     }
 
-    public void setBottomText(String bottomText) {
+    public void setBottomText(String bottomText)
+    {
         this.bottomText = bottomText;
         this.invalidate();
     }
@@ -265,7 +287,8 @@ public class ArcProgress extends View {
         return progress;
     }
 
-    public void setProgress(float progress) {
+    public void setProgress(float progress)
+    {
         this.progress = progress;
         if (this.progress > getMax()) {
             this.progress %= getMax();
@@ -277,7 +300,8 @@ public class ArcProgress extends View {
         return max;
     }
 
-    public void setMax(float max) {
+    public void setMax(float max)
+    {
         this.max = max;
         invalidate();
     }
@@ -286,7 +310,8 @@ public class ArcProgress extends View {
         return min;
     }
 
-    public void setMin(float min) {
+    public void setMin(float min)
+    {
         this.min = min;
         invalidate();
     }
@@ -295,7 +320,8 @@ public class ArcProgress extends View {
         return gaugeStyle;
     }
 
-    public void setGaugeStyle(int gaugestyle) {
+    public void setGaugeStyle(int gaugestyle)
+    {
         this.gaugeStyle = gaugestyle;
         invalidate();
     }
@@ -304,7 +330,8 @@ public class ArcProgress extends View {
         return bottomTextSize;
     }
 
-    public void setBottomTextSize(float bottomTextSize) {
+    public void setBottomTextSize(float bottomTextSize)
+    {
         this.bottomTextSize = bottomTextSize;
         this.invalidate();
     }
@@ -313,7 +340,8 @@ public class ArcProgress extends View {
         return textSize;
     }
 
-    public void setTextSize(float textSize) {
+    public void setTextSize(float textSize)
+    {
         this.textSize = textSize;
         this.invalidate();
     }
@@ -322,7 +350,8 @@ public class ArcProgress extends View {
         return this.useGradientColor;
     }
 
-    public void setUseGradientColor(boolean useGradientColor) {
+    public void setUseGradientColor(boolean useGradientColor)
+    {
         this.useGradientColor = useGradientColor;
     }
 
@@ -330,7 +359,8 @@ public class ArcProgress extends View {
         return textColor;
     }
 
-    public void setTextColor(int textColor) {
+    public void setTextColor(int textColor)
+    {
         this.textColor = textColor;
         this.invalidate();
     }
@@ -339,7 +369,8 @@ public class ArcProgress extends View {
         return finishedStrokeColor;
     }
 
-    public void setFinishedStrokeColor(int finishedStrokeColor) {
+    public void setFinishedStrokeColor(int finishedStrokeColor)
+    {
         this.finishedStrokeColor = finishedStrokeColor;
         this.invalidate();
     }
@@ -348,7 +379,8 @@ public class ArcProgress extends View {
         return unfinishedStrokeColor;
     }
 
-    public void setUnfinishedStrokeColor(int unfinishedStrokeColor) {
+    public void setUnfinishedStrokeColor(int unfinishedStrokeColor)
+    {
         this.unfinishedStrokeColor = unfinishedStrokeColor;
         this.invalidate();
     }
@@ -357,7 +389,8 @@ public class ArcProgress extends View {
         return arcAngle;
     }
 
-    public void setArcAngle(float arcAngle) {
+    public void setArcAngle(float arcAngle)
+    {
         this.arcAngle = arcAngle;
         this.invalidate();
     }
@@ -366,7 +399,8 @@ public class ArcProgress extends View {
         return suffixText;
     }
 
-    public void setSuffixText(String suffixText) {
+    public void setSuffixText(String suffixText)
+    {
         this.suffixText = suffixText;
         this.invalidate();
     }
@@ -375,7 +409,8 @@ public class ArcProgress extends View {
         return suffixTextPadding;
     }
 
-    public void setSuffixTextPadding(float suffixTextPadding) {
+    public void setSuffixTextPadding(float suffixTextPadding)
+    {
         this.suffixTextPadding = suffixTextPadding;
         this.invalidate();
     }
@@ -391,10 +426,12 @@ public class ArcProgress extends View {
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
+    {
         int size = Math.min(MeasureSpec.getSize(heightMeasureSpec), MeasureSpec.getSize(widthMeasureSpec));
         setMeasuredDimension(size, size);
-        if (needleBitmap != null) {
+        if (needleBitmap != null)
+        {
             Bitmap resized = resizeBitmap(needleBitmap, size, size);
             setNeedleBitmap(resized);
         }
@@ -403,9 +440,12 @@ public class ArcProgress extends View {
         float angle = (360 - arcAngle) / 2f;
         arcBottomHeight = radius * (float) (1 - Math.cos(angle / 180 * Math.PI));
         setBottomTextSize((float) (size / 9.33));
-        if (getGaugeStyle() == 6 || getGaugeStyle() == 7) {
+        if (getGaugeStyle() == Constants.GaugeStyles.PartialFilled1 || getGaugeStyle() == Constants.GaugeStyles.PartialFilled2)
+        {
             setTextSize((float) (size / 6.1));
-        } else {
+        }
+        else
+        {
             setTextSize((float) (size / 5.1));
         }
         setSuffixTextSize((float) (size / 10.25));
@@ -413,9 +453,10 @@ public class ArcProgress extends View {
         if (size == 0)
             return;
 
-        int[] colors = {finishedStrokeColor, low1color, low2color, low2color, Color.BLACK};
-        if (isReverse) {
-            colors[0] = low2color;
+        int[] colors = {finishedStrokeColor, low1Color, low2Color, low2Color, Color.BLACK};
+        if (isReverse)
+        {
+            colors[0] = low2Color;
             colors[2] = finishedStrokeColor;
             colors[3] = finishedStrokeColor;
         }
@@ -423,43 +464,49 @@ public class ArcProgress extends View {
         // Log.d("OBD2AA","Min: " + getMin() + "Max: " + getMax()+ " Arch points: "+0+ ", "+ (float) (warn1 * 0.8 / (getMax() - getMin()))+ ", "+ (float) (warn2 * 0.8 / (getMax() - getMin()))+ ", "+ 0.8f+ ", "+ 1);
 
         Matrix gradientMatrix = new Matrix();
-        gradientMatrix.preRotate((startposition - arcAngle / 2f) - 7, size / 2f, size / 2f);
+        gradientMatrix.preRotate((startPosition - arcAngle / 2f) - 7, size / 2f, size / 2f);
         gradient = new SweepGradient(size / 2, size / 2, colors, positions);
         gradient.setLocalMatrix(gradientMatrix);
 
-        if (getGaugeStyle() == 6 || getGaugeStyle() == 7) {
+        if (getGaugeStyle() == Constants.GaugeStyles.PartialFilled1 || getGaugeStyle() == Constants.GaugeStyles.PartialFilled2)
+        {
             setStrokeWidth(30 / (480 / (float) size));
             float dist = (57 / (480 / (float) size));
             oval = new RectF(dist, dist, size - dist, size - dist);
         }
 
-        myradius = size / 2;
+        myRadius = size / 2;
         cx = size / 2f;
         x = 0;
-        if (getGaugeStyle() == 6 || getGaugeStyle() == 7) {
-            float scalelenght = (14 / (480 / (float) size));
-            for (int i = -135; i <= 135; i += 27) {
+        if (getGaugeStyle() == Constants.GaugeStyles.PartialFilled1 || getGaugeStyle() == Constants.GaugeStyles.PartialFilled2)
+        {
+            float scaleLength = (14 / (480 / (float) size));
+            for (int i = -135; i <= 135; i += 27)
+            {
 
                 float angle2 = (float) Math.toRadians(i); // Need to convert to radians first
 
-                float startX = (float) (cx + (myradius) * Math.sin(angle2));
-                float startY = (float) (cx - (myradius) * Math.cos(angle2));
+                float startX = (float) (cx + (myRadius) * Math.sin(angle2));
+                float startY = (float) (cx - (myRadius) * Math.cos(angle2));
 
-                float stopX = (float) (cx + (myradius - scalelenght) * Math.sin(angle2));
-                float stopY = (float) (cx - (myradius - scalelenght) * Math.cos(angle2));
+                float stopX = (float) (cx + (myRadius - scaleLength) * Math.sin(angle2));
+                float stopY = (float) (cx - (myRadius - scaleLength) * Math.cos(angle2));
                 scale_pos[x] = new float[]{startX, startY, stopX, stopY};
                 x++;
             }
-        } else {
+        }
+        else
+        {
             float scaleMarkSize = getResources().getDisplayMetrics().density * getStrokeWidth();
-            for (int i = -145; i <= 145; i += 29) {
+            for (int i = -145; i <= 145; i += 29)
+            {
                 float angle2 = (float) Math.toRadians(i); // Need to convert to radians first
 
-                float startX = (float) (cx + (myradius - 2 - getStrokeWidth()) * Math.sin(angle2));
-                float startY = (float) (cx - (myradius - 2 - getStrokeWidth()) * Math.cos(angle2));
+                float startX = (float) (cx + (myRadius - 2 - getStrokeWidth()) * Math.sin(angle2));
+                float startY = (float) (cx - (myRadius - 2 - getStrokeWidth()) * Math.cos(angle2));
 
-                float stopX = (float) (cx + (myradius - 2 - getStrokeWidth() - scaleMarkSize) * Math.sin(angle2));
-                float stopY = (float) (cx - (myradius - 2 - getStrokeWidth() - scaleMarkSize) * Math.cos(angle2));
+                float stopX = (float) (cx + (myRadius - 2 - getStrokeWidth() - scaleMarkSize) * Math.sin(angle2));
+                float stopY = (float) (cx - (myRadius - 2 - getStrokeWidth() - scaleMarkSize) * Math.cos(angle2));
                 scale_pos[x] = new float[]{startX, startY, stopX, stopY};
                 x++;
             }
@@ -468,41 +515,43 @@ public class ArcProgress extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(Canvas canvas)
+    {
         super.onDraw(canvas);
 
-        float startAngle = startposition - arcAngle / 2f;
-        float curr_progress = progress + Math.abs(getMin());
-        float finishedSweepAngle = (curr_progress / (getMax() + Math.abs(getMin()))) * arcAngle;
-        //Log.d("OBD2AA","Progress: "+progress + ", Curr_progress: "+curr_progress+ ", Max: "+ getMax()+", Min: "+getMin()+ ", arcAngle: "+arcAngle + ",Finished: "+finishedSweepAngle);
-        //if(curr_progress == 0) finishedStartAngle = 0.01f;
+        float startAngle = startPosition - arcAngle / 2f;
+        float currentProgress = progress + Math.abs(getMin());
+        float finishedSweepAngle = (currentProgress / (getMax() + Math.abs(getMin()))) * arcAngle;
+        //Log.d("OBD2AA","Progress: "+progress + ", Curr_progress: "+currentProgress+ ", Max: "+ getMax()+", Min: "+getMin()+ ", arcAngle: "+arcAngle + ",Finished: "+finishedSweepAngle);
+        //if(currentProgress == 0) finishedStartAngle = 0.01f;
         paint.setColor(unfinishedStrokeColor);
-        //We need to calculate the store witdth, assuming
+        //We need to calculate the store width, assuming
 
         paint.setStrokeWidth(strokeWidth);
-        switch (getGaugeStyle()) {
-            case 0:
-            case 3:
+        switch (getGaugeStyle())
+        {
+            case Constants.GaugeStyles.Clear:
+            case Constants.GaugeStyles.BackgroundNoArch:
                 break;
-            case 1:
+            case Constants.GaugeStyles.NoBackgroundPercentageArch:
                 paint.setColor(unfinishedStrokeColor);
                 paint.setShader(null);
                 canvas.drawArc(rectF, startAngle, arcAngle, false, paint);
                 break;
-            case 2:
+            case Constants.GaugeStyles.NoBackgroundFullArch:
                 paint.setColor(finishedStrokeColor);
                 paint.setShader(gradient);
                 canvas.drawArc(rectF, startAngle, arcAngle, false, paint);
                 paint.setShader(null);
                 break;
-            case 4:
+            case Constants.GaugeStyles.BackgroundPercentageArch:
                 paint.setStyle(Paint.Style.FILL);
                 paint.setColor(unfinishedStrokeColor);
                 paint.setShader(null);
                 canvas.drawArc(rectF, startAngle, arcAngle, false, paint);
                 paint.setStyle(Paint.Style.STROKE);
                 break;
-            case 5:
+            case Constants.GaugeStyles.BackgroundFullArch:
                 paint.setStyle(Paint.Style.FILL);
                 canvas.drawArc(rectF, startAngle, arcAngle, false, paint);
                 paint.setStyle(Paint.Style.STROKE);
@@ -513,7 +562,9 @@ public class ArcProgress extends View {
                 break;
         }
 
-        if (getGaugeStyle() == 1 || getGaugeStyle() == 4) {
+        if (getGaugeStyle() == Constants.GaugeStyles.NoBackgroundPercentageArch
+                || getGaugeStyle() == Constants.GaugeStyles.BackgroundPercentageArch)
+        {
             //paint.setStrokeCap(Paint.Cap.SQUARE);
             paint.setStyle(Paint.Style.STROKE);
             paint.setColor(Color.WHITE);
@@ -521,7 +572,10 @@ public class ArcProgress extends View {
             canvas.drawArc(rectF, startAngle, finishedSweepAngle, false, paint);
             //Log.d("OBD2AA","From angle: " + finishedStartAngle + "to angle: "+finishedSweepAngle);
             paint.setShader(null);
-        } else if (getGaugeStyle() == 6 || getGaugeStyle() == 7) {
+        }
+        else if (getGaugeStyle() == Constants.GaugeStyles.PartialFilled1
+                || getGaugeStyle() == Constants.GaugeStyles.PartialFilled2)
+        {
             //paint.setStrokeCap(Paint.Cap.SQUARE);
             paint.setStyle(Paint.Style.STROKE);
             paint.setColor(Color.WHITE);
@@ -531,38 +585,51 @@ public class ArcProgress extends View {
             paint.setShader(null);
         }
 
-        if (showArc) {  //This is scho Scale actually
+        if (showArc) // This is show Scale actually
+        {
             paint.setStyle(Paint.Style.STROKE);
-            if (getGaugeStyle() == 6 || getGaugeStyle() == 7) {
+            if (getGaugeStyle() == Constants.GaugeStyles.PartialFilled1
+                    || getGaugeStyle() == Constants.GaugeStyles.PartialFilled2)
+            {
                 paint.setColor(getFinishedStrokeColor());
-            } else {
+            }
+            else
+            {
                 paint.setColor(getFinishedStrokeColor());
             }
             paint.setStrokeWidth(2);
-            if (getGaugeStyle() == 6 || getGaugeStyle() == 7) {
+            if (getGaugeStyle() == Constants.GaugeStyles.PartialFilled1
+                    || getGaugeStyle() == Constants.GaugeStyles.PartialFilled2)
+            {
                 paint.setTextSize(getWidth() / 14);
-                for (int i = 0; i < x; i++) {
+                for (int i = 0; i < x; i++)
+                {
                     canvas.drawLine(scale_pos[i][0], scale_pos[i][1], scale_pos[i][2], scale_pos[i][3], paint);
                 }
-            } else {
-                for (int i = 0; i < x; i++) {
+            }
+            else
+            {
+                for (int i = 0; i < x; i++)
+                {
                     canvas.drawLine(scale_pos[i][0], scale_pos[i][1], scale_pos[i][2], scale_pos[i][3], paint);
                 }
             }
             paint.setStrokeWidth(getStrokeWidth());
         }
 
-        if (showNeedle) {
-            if (needleBitmap == null) {
+        if (showNeedle)
+        {
+            if (needleBitmap == null)
+            {
                 paint.setShader(null);
-                paint.setColor(needlecolor);
+                paint.setColor(needleColor);
                 paint.setStyle(Paint.Style.FILL);
                 paint.setStrokeWidth(3);
                 Path path = new Path();
                 path.moveTo(cx, cx);
                 path.lineTo(cx - 4, cx);
                 path.lineTo(cx, cx + 4);
-                path.lineTo(cx + (myradius - 20 - indent), cx);
+                path.lineTo(cx + (myRadius - 20 - indent), cx);
                 path.lineTo(cx, cx - 4);
                 path.lineTo(cx - 4, cx);
                 path.close();
@@ -573,7 +640,9 @@ public class ArcProgress extends View {
                 paint.setColor(Color.BLACK);
                 canvas.drawCircle(cx, cx, 2, paint);
                 paint.setStyle(Paint.Style.STROKE);
-            } else {
+            }
+            else
+            {
                 Matrix needlematrix = new Matrix();
                 needlematrix.setRotate(startAngle + finishedSweepAngle, cx, cx);
                 paint.setAntiAlias(true);
@@ -587,40 +656,61 @@ public class ArcProgress extends View {
         float bottomTextBaseline = 0;
         float bottomTextHeigh = 0;
 
-        if (arcBottomHeight == 0) {
+        if (arcBottomHeight == 0)
+        {
             float radius = getWidth() / 2f;
             float angle = (360 - arcAngle) / 2f;
             arcBottomHeight = radius * (float) (1 - Math.cos(angle / 180 * Math.PI));
         }
-        if (!TextUtils.isEmpty(getBottomText())) {
-            if (getGaugeStyle() == 6 || getGaugeStyle() == 7) {
+        if (!TextUtils.isEmpty(getBottomText()))
+        {
+            if (getGaugeStyle() == Constants.GaugeStyles.PartialFilled1
+                    || getGaugeStyle() == Constants.GaugeStyles.PartialFilled2)
+            {
                 textPaint.setTextSize(bottomTextSize);
                 bottomTextBaseline = getHeight() / 2 + (70 / (480 / (float) getWidth()));
                 canvas.drawText(suffixText, (getWidth() - textPaint.measureText(suffixText)) / 2.0f, bottomTextBaseline, textPaint);
-            } else {
+            }
+            else
+            {
                 textPaint.setTextSize(bottomTextSize);
                 canvas.drawText(getBottomText(), (getWidth() - textPaint.measureText(getBottomText())) / 2.0f, getHeight(), textPaint);
             }
         }
 
-        if (!TextUtils.isEmpty(text)) {
+        if (!TextUtils.isEmpty(text))
+        {
             textPaint.setColor(textColor);
-            if (getUseGradientColor()) {
-                if (isReverse) {
-                    if (curr_progress > warn2) {
+            if (getUseGradientColor())
+            {
+                if (isReverse)
+                {
+                    if (currentProgress > warn2)
+                    {
                         textPaint.setColor(getFinishedStrokeColor());
-                    } else if (curr_progress > warn1) {
-                        textPaint.setColor((low1color));
-                    } else {
-                        textPaint.setColor(low2color);
                     }
-                } else {
-                    if (curr_progress < warn1) {
+                    else if (currentProgress > warn1)
+                    {
+                        textPaint.setColor((low1Color));
+                    }
+                    else
+                    {
+                        textPaint.setColor(low2Color);
+                    }
+                }
+                else
+                {
+                    if (currentProgress < warn1)
+                    {
                         textPaint.setColor(getFinishedStrokeColor());
-                    } else if (curr_progress < warn2) {
-                        textPaint.setColor((low1color));
-                    } else {
-                        textPaint.setColor(low2color);
+                    }
+                    else if (currentProgress < warn2)
+                    {
+                        textPaint.setColor((low1Color));
+                    }
+                    else
+                    {
+                        textPaint.setColor(low2Color);
                     }
                 }
             }
@@ -629,10 +719,14 @@ public class ArcProgress extends View {
             float textHeight = textPaint.descent() + textPaint.ascent();
             float textBaseline = (getHeight() - textHeight) / 2.0f;
 
-            if (showText) {
-                if (!showNeedle) {
+            if (showText)
+            {
+                if (!showNeedle)
+                {
                     canvas.drawText(text, (getWidth() - textPaint.measureText(text)) / 2.0f, textBaseline, textPaint);
-                } else {
+                }
+                else
+                {
                     Rect textBounds = new Rect();
                     textPaint.getTextBounds(getBottomText(), 0, getBottomText().length(), textBounds);
                     textPaint.setTextSize((float) (getBottomTextSize() * 1.8));
@@ -643,17 +737,25 @@ public class ArcProgress extends View {
             textPaint.setTextSize(suffixTextSize);
             float suffixHeight = textPaint.descent() + textPaint.ascent();
 
-            if (showUnit) {
-                if (!showNeedle) {
-                    if (getGaugeStyle() == 6 || getGaugeStyle() == 7) {
+            if (showUnit)
+            {
+                if (!showNeedle)
+                {
+                    if (getGaugeStyle() == Constants.GaugeStyles.PartialFilled1
+                            || getGaugeStyle() == Constants.GaugeStyles.PartialFilled2)
+                    {
                         textHeight = getHeight() / 2 - (40 / (480 / (float) getWidth()));
                         textPaint.setColor(getTextColor());
                         canvas.drawText(getBottomText(), (getWidth() - textPaint.measureText(getBottomText())) / 2.0f, textHeight, textPaint);
-                    } else {
+                    }
+                    else
+                    {
                         textBaseline = (getHeight() - textHeight) / 2.0f;
                         canvas.drawText(suffixText, getWidth() / 2.0f + textPaint.measureText(text) + suffixTextPadding + 5, textBaseline + textHeight - suffixHeight, textPaint);
                     }
-                } else {
+                }
+                else
+                {
                     textPaint.setTextSize(textSize);
                     canvas.drawText(suffixText, (getWidth() - textPaint.measureText(suffixText)) / 2.0f, textBaseline + textHeight + 5, textPaint);
                 }
@@ -661,7 +763,8 @@ public class ArcProgress extends View {
         }
     }
 
-    public Bitmap resizeBitmap(Bitmap bitmap, int newWidth, int newHeight) {
+    public Bitmap resizeBitmap(Bitmap bitmap, int newWidth, int newHeight)
+    {
         Bitmap scaledBitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
 
         float ratioX = newWidth / (float) bitmap.getWidth();
@@ -679,7 +782,8 @@ public class ArcProgress extends View {
     }
 
     @Override
-    protected Parcelable onSaveInstanceState() {
+    protected Parcelable onSaveInstanceState()
+    {
         final Bundle bundle = new Bundle();
         bundle.putParcelable(INSTANCE_STATE, super.onSaveInstanceState());
         bundle.putFloat(INSTANCE_STROKE_WIDTH, getStrokeWidth());
@@ -699,8 +803,10 @@ public class ArcProgress extends View {
     }
 
     @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        if (state instanceof Bundle) {
+    protected void onRestoreInstanceState(Parcelable state)
+    {
+        if (state instanceof Bundle)
+        {
             final Bundle bundle = (Bundle) state;
             strokeWidth = bundle.getFloat(INSTANCE_STROKE_WIDTH);
             suffixTextSize = bundle.getFloat(INSTANCE_SUFFIX_TEXT_SIZE);
