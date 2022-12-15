@@ -36,36 +36,43 @@
 
     <androidx.preference.SwitchPreferenceCompat
         android:key="isreversed"
+        android:defaultValue="false"
         android:title="@string/isreversed"
         app:iconSpaceReserved="false" />
 
     <androidx.preference.SwitchPreferenceCompat
         android:key="showneedle"
+        android:defaultValue="true"
         android:title="@string/show_needle"
         app:iconSpaceReserved="false" />
 
     <androidx.preference.SwitchPreferenceCompat
         android:key="showscale"
+        android:defaultValue="true"
         android:title="@string/show_scale"
         app:iconSpaceReserved="false" />
 
     <androidx.preference.SwitchPreferenceCompat
         android:key="showunit"
+        android:defaultValue="false"
         android:title="@string/show_unit"
         app:iconSpaceReserved="false" />
 
     <androidx.preference.SwitchPreferenceCompat
         android:key="showtext"
+        android:defaultValue="false"
         android:title="@string/show_text"
         app:iconSpaceReserved="false" />
 
     <androidx.preference.SwitchPreferenceCompat
         android:key="usegradienttext"
+        android:defaultValue="false"
         android:title="@string/use_warning_text"
         app:iconSpaceReserved="false" />
 
     <androidx.preference.SwitchPreferenceCompat
         android:key="showdecimal"
+        android:defaultValue="false"
         android:title="@string/show_decimals"
         app:iconSpaceReserved="false" />
 

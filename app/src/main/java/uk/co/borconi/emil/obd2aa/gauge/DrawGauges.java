@@ -47,7 +47,8 @@ public class DrawGauges {
         int numberOfGaugesInRow = Math.min(numberOfGauges, maxNumberOfGaugesInRow);
         int numberOfRows = ((numberOfGauges - 1) / numberOfGaugesInRow) + 1;
 
-        int desiredGaugeHeight = (displayMetrics.heightPixels - (verticalGaugeGap * (numberOfRows + 1))) / numberOfRows;
+        // +3 for extra spaces on top and bottom
+        int desiredGaugeHeight = (displayMetrics.heightPixels - (verticalGaugeGap * (numberOfRows + 3))) / numberOfRows;
 
         int desiredHorizontalGap = (displayMetrics.widthPixels - (numberOfGaugesInRow * desiredGaugeHeight)) / (numberOfGaugesInRow + 1);
 
@@ -93,8 +94,8 @@ public class DrawGauges {
         newArc.setBottomText(prefs.getNameForGauge(gaugeNumber));
         newArc.setisReverse(prefs.isReversedForGauge(gaugeNumber));
         newArc.setFinishedStrokeColor(prefs.getArchColor());
-        newArc.setwarn1color(prefs.getWarn1Color());
-        newArc.setwarn2color(prefs.getWarn2Color());
+        newArc.setWarn1Color(prefs.getWarn1Color());
+        newArc.setWarn2Color(prefs.getWarn2Color());
         newArc.setWarn1(prefs.getWarn1LevelForGauge(gaugeNumber));
         newArc.setWarn2(prefs.getWarn2LevelForGauge(gaugeNumber));
         newArc.setMax(prefs.getMaxValueForGauge(gaugeNumber));
@@ -113,7 +114,7 @@ public class DrawGauges {
         } else {
             newArc.setArcAngle(360 * 0.8f);
             newArc.setShowNeedle(prefs.shouldShowNeedleForGauge(gaugeNumber));
-            newArc.setNeedlecolor(prefs.getNeedleColor());
+            newArc.setNeedleColor(prefs.getNeedleColor());
         }
         newArc.setShowArc(prefs.shouldShowScaleForGauge(gaugeNumber));
         newArc.setShowText(prefs.shouldShowTextForGauge(gaugeNumber));
