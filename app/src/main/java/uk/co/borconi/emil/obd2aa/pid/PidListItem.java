@@ -7,7 +7,7 @@ import org.json.JSONObject;
  * Created by Emil on 31/08/2017.
  */
 
-public class PidList {
+public class PidListItem {
 
     public String longName;
     public String shortName;
@@ -17,7 +17,7 @@ public class PidList {
     public String scale;
     public String pid;
 
-    public PidList(String info) {
+    public PidListItem(String info) {
         String[] pidinfo = info.split(",");
         this.longName = pidinfo[0];
         this.shortName = pidinfo[1];
@@ -28,7 +28,7 @@ public class PidList {
         this.pid = pidinfo[6] + "," + pidinfo[7];
     }
 
-    public PidList(JSONObject data) {
+    public PidListItem(JSONObject data) {
         try {
             this.longName = data.getString("longName");
             this.shortName = data.getString("shortName");

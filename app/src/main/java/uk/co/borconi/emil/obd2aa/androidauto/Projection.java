@@ -94,7 +94,7 @@ public class Projection extends Presentation {
         }
         ArcProgress arcProgress = tv.findViewWithTag("gauge_" + i);
         arcProgress.setMax(i1);
-        float min = prefs.getMaxValueForGauge(i);
+        float min = prefs.getMinValueForGauge(i);
         float warn1 = prefs.getWarn1LevelForGauge(i);
         float warn2 = prefs.getWarn2LevelForGauge(i);
 

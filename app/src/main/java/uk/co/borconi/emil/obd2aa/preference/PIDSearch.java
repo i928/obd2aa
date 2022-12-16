@@ -20,12 +20,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.preference.ListPreference;
 
 import uk.co.borconi.emil.obd2aa.R;
-import uk.co.borconi.emil.obd2aa.pid.PidList;
+import uk.co.borconi.emil.obd2aa.pid.PidListItem;
 
 public class PIDSearch extends AlertDialog implements View.OnClickListener, TextWatcher {
 
     private static final String TAG = "OBD2AA";
-    ArrayAdapter<PidList> adapter = null;
+    ArrayAdapter<PidListItem> adapter = null;
     private final ListView list;
     private EditText filterText = null;
 
@@ -54,7 +54,7 @@ public class PIDSearch extends AlertDialog implements View.OnClickListener, Text
 
         filterText.addTextChangedListener(this);
         list = alertLayout.findViewById(R.id.List);
-        adapter = new ArrayAdapter<PidList>(context, android.R.layout.simple_list_item_single_choice, pidlist);
+        adapter = new ArrayAdapter<PidListItem>(context, android.R.layout.simple_list_item_single_choice, pidlist);
 
         list.setAdapter(adapter);
 
@@ -63,7 +63,7 @@ public class PIDSearch extends AlertDialog implements View.OnClickListener, Text
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                PidList pid = (PidList) a.getItemAtPosition(position);
+                PidListItem pid = (PidListItem) a.getItemAtPosition(position);
                 preference.setValue(pid.getPid());
                 Log.d(TAG, "Selected Item is = " + list.getItemAtPosition(position) + " position: " + position + "ID: " + pid.getPid());
 

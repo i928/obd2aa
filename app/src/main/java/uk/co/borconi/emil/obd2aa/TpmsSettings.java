@@ -7,7 +7,7 @@ import android.os.Bundle;
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import uk.co.borconi.emil.obd2aa.pid.PidList;
+import uk.co.borconi.emil.obd2aa.pid.PidListItem;
 
 
 public class TpmsSettings extends PreferenceFragmentCompat {
@@ -24,7 +24,7 @@ public class TpmsSettings extends PreferenceFragmentCompat {
             entries = new String[pidlist.size()];
             entryValues = new String[pidlist.size()];
             int i = 0;
-            for (PidList pid : pidlist) {
+            for (PidListItem pid : pidlist) {
                 entries[i] = pid.getPidName();
                 entryValues[i] = pid.getPid();
                 i++;

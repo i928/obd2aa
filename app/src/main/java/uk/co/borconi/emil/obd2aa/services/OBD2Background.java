@@ -47,8 +47,8 @@ import uk.co.borconi.emil.obd2aa.pid.PIDToFetch;
  */
 
 
-public class OBD2Background {
-
+public class OBD2Background
+{
     public static boolean isDebugging;
     static volatile boolean isRunning;
     private final Context context;
@@ -69,17 +69,23 @@ public class OBD2Background {
     private int audio_1, audio_2, audio_3, visual_display;
     private boolean useImperial;
 
-    private ServiceConnection connection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName arg0, IBinder service) {
+    private ServiceConnection connection = new ServiceConnection()
+    {
+        public void onServiceConnected(ComponentName arg0, IBinder service)
+        {
             Log.d("HU", "SERVICE CONNECTED!");
             torqueService = ITorqueService.Stub.asInterface(service);
 
-            try {
-                if (torqueService.getVersion() < 19) {
+            try
+            {
+                if (torqueService.getVersion() < 19)
+                {
                     Log.d("OBD2-APP", "Incorrect version. You are using an old version of Torque with this plugin.\n\nThe plugin needs the latest version of Torque to run correctly.\n\nPlease upgrade to the latest version of Torque from Google Play");
                     return;
                 }
-            } catch (RemoteException e) {
+            }
+            catch (RemoteException e)
+            {
                 throw new RuntimeException(e);
             }
             Log.d("HU", "Have Torque service connection, starting fetching");
@@ -97,9 +103,12 @@ public class OBD2Background {
 
             //Intent localIntent = new Intent(getApplicationContext(), MyOdbService.class);
             String text;
-            if (torqueAlarm.getString("ALARM_TYPE").equalsIgnoreCase("MIN")) {
+            if (torqueAlarm.getString("ALARM_TYPE").equalsIgnoreCase("MIN"))
+            {
                 text = "Current value " + String.format("%.2f", torqueAlarm.getDouble("CURRENT_VALUE")) + " " + torqueAlarm.getString("UNIT") + " is lower than: " + String.format("%.2f", torqueAlarm.getDouble("TRIGGER_VALUE")) + " " + torqueAlarm.getString("UNIT");
-            } else {
+            }
+            else
+            {
                 text = "Current value " + String.format("%.2f", torqueAlarm.getDouble("CURRENT_VALUE")) + " " + torqueAlarm.getString("UNIT") + " is over than: " + String.format("%.2f", torqueAlarm.getDouble("TRIGGER_VALUE")) + " " + torqueAlarm.getString("UNIT");
             }
 
@@ -111,14 +120,16 @@ public class OBD2Background {
     private long lastcardupdate;
 
 
-    public OBD2Background(ITorqueService torqueService, Context context) {
+    public OBD2Background(ITorqueService torqueService, Context context)
+    {
         this.torqueService = torqueService;
         this.context = context;
 
         onCreate();
     }
 
-    public void onCreate() {
+    public void onCreate()
+    {
         prefs = PreferencesHelper.getPreferences(context);
         mNotifyMgr = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         editor = prefs.edit();
@@ -130,7 +141,8 @@ public class OBD2Background {
         audio_3 = prefs.getAudio3();
         visual_display = prefs.getVisualDisplay();
 
-        if (useImperial) {
+        if (useImperial)
+        {
             audio_1 = (int) Math.round(audio_1 / 1.09361);
             audio_2 = (int) Math.round(audio_2 / 1.09361);
             audio_3 = (int) Math.round(audio_3 / 1.09361);
@@ -141,7 +153,8 @@ public class OBD2Background {
         units = new String[gaugeNumber];
         isDebugging = prefs.isDebugging();
         alternativePulling = prefs.hasAlternativePulling();
-        for (int i = 1; i <= gaugeNumber; i++) {
+        for (int i = 1; i <= gaugeNumber; i++)
+        {
             pids[i - 1] = prefs.getPidForGauge(i);
             units[i - 1] = prefs.getUnitForGauge(i);
             Log.d("OBD2AA", "Gounde number: " + i + " pid: " + prefs.getPidForGauge(i).split(",")[0] + " Unit: " + prefs.getUnitForGauge(i));
@@ -163,13 +176,16 @@ public class OBD2Background {
         mUimodemanager = (UiModeManager) context.getSystemService(UI_MODE_SERVICE);
     }
 
-    public void onDestroy() {
+    public void onDestroy()
+    {
         Log.d("OBD2AA", "OBD2 Background Service on Destroy");
         isRunning = false;
-        if (mBind) {
+        if (mBind)
+        {
             context.unbindService(connection);
         }
-        if (receiver != null) {
+        if (receiver != null)
+        {
             context.unregisterReceiver(receiver);
         }
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
@@ -183,7 +199,8 @@ public class OBD2Background {
         android.os.Process.killProcess(android.os.Process.myPid()); //Do a kill.
     }
 
-    private void dataFetcher() {
+    private void dataFetcher()
+    {
         final String[] fuelPid = {prefs.watchFuel(), prefs.coolantPid()};
 
         isRunning = true;
@@ -195,23 +212,34 @@ public class OBD2Background {
                 int i;
                 char c;
                 double d;
-                try {
-                    while (OBD2Background.isRunning) {
-                        if (torqueService != null) {
-                            if (!ecuConnected) {
-                                try {
-                                    if (torqueService.isConnectedToECU()) {
+                try
+                {
+                    while (OBD2Background.isRunning)
+                    {
+                        if (torqueService != null)
+                        {
+                            if (!ecuConnected)
+                            {
+                                try
+                                {
+                                    if (torqueService.isConnectedToECU())
+                                    {
                                         ecuConnected = true;
                                     }
-                                } catch (RemoteException unused) {
                                 }
-                            } else if (firstFetch) {
+                                catch (RemoteException unused) { }
+                            }
+                            else if (firstFetch)
+                            {
                                 firstFetch = false;
                                 sortPids();
-                            } else if (!alternativePulling) {
+                            }
+                            else if (!alternativePulling)
+                            {
                                 List pidsAsList = Arrays.asList(pids);
                                 float[] pIDValues = torqueService.getPIDValues(pids);
-                                if (OBD2Background.isDebugging) {
+                                if (OBD2Background.isDebugging)
+                                {
                                     StringBuilder sb = new StringBuilder();
                                     sb.append("Pids requested: ");
                                     sb.append(Arrays.toString(pids));
@@ -222,13 +250,19 @@ public class OBD2Background {
                                     Log.d("OBD2-APP", sb2.toString());
                                 }
                                 long[] pIDUpdateTime = torqueService.getPIDUpdateTime(pids);
-                                for (PIDToFetch pIDToFetch : pidToFetch) {
+                                for (PIDToFetch pIDToFetch : pidToFetch)
+                                {
                                     int indexOf = pidsAsList.indexOf(pIDToFetch.getSinglePid());
-                                    if (indexOf == 0 || pIDValues[indexOf] != pIDValues[indexOf - 1]) {
-                                        if (isDemoMode) {
-                                            if (pIDToFetch.getLastvalue() == 0.0d) {
+                                    if (indexOf == 0 || pIDValues[indexOf] != pIDValues[indexOf - 1])
+                                    {
+                                        if (isDemoMode)
+                                        {
+                                            if (pIDToFetch.getLastvalue() == 0.0d)
+                                            {
                                                 d = pIDToFetch.getMaxValue();
-                                            } else {
+                                            }
+                                            else
+                                            {
                                                 d = pIDToFetch.getLastvalue() * 1.2d;
                                             }
                                             double nextDouble = ThreadLocalRandom.current().nextDouble(Math.max(pIDToFetch.getMinValue(), pIDToFetch.getLastvalue() / 1.2d), Math.min(pIDToFetch.getMaxValue(), d));
@@ -236,12 +270,15 @@ public class OBD2Background {
                                             if (EventBus.getDefault().hasSubscriberForEvent(GaugeUpdate.class))
                                                 EventBus.getDefault().post(new GaugeUpdate(pIDToFetch.getGaugeNumber(), (float) nextDouble));
 
-
-                                        } else if (!(pIDUpdateTime[indexOf] == pIDToFetch.getLastFetch() || pIDUpdateTime[indexOf] == 0)) {
+                                        }
+                                        else if (!(pIDUpdateTime[indexOf] == pIDToFetch.getLastFetch() || pIDUpdateTime[indexOf] == 0))
+                                        {
                                             pIDToFetch.putLastFetch(pIDUpdateTime[indexOf]);
 
-                                            if (pIDToFetch.getNeedsConversion()) {
-                                                if (OBD2Background.isDebugging) {
+                                            if (pIDToFetch.getNeedsConversion())
+                                            {
+                                                if (OBD2Background.isDebugging)
+                                                {
                                                     StringBuilder sb3 = new StringBuilder();
                                                     sb3.append("PID BEFORE CONVERSION");
                                                     sb3.append(pIDToFetch.getPID()[0]);
@@ -255,7 +292,8 @@ public class OBD2Background {
                                                 }
                                                 pIDValues[indexOf] = UnitConvertHelper.ConvertValue(pIDValues[indexOf], pIDToFetch.getUnit());
                                             }
-                                            if (EventBus.getDefault().hasSubscriberForEvent(GaugeUpdate.class)) {
+                                            if (EventBus.getDefault().hasSubscriberForEvent(GaugeUpdate.class))
+                                            {
                                                 GaugeUpdate update = new GaugeUpdate(
                                                         pIDToFetch.getGaugeNumber(),
                                                         Math.max(
@@ -265,7 +303,8 @@ public class OBD2Background {
                                                 EventBus.getDefault().post(update);
                                             }
 
-                                            if (OBD2Background.isDebugging) {
+                                            if (OBD2Background.isDebugging)
+                                            {
                                                 StringBuilder sb5 = new StringBuilder();
                                                 sb5.append("PID   ");
                                                 sb5.append(pIDToFetch.getPID()[0]);
@@ -282,14 +321,19 @@ public class OBD2Background {
                                 }
                                 i = 100;
                                 Thread.sleep(i);
-                            } else {
-                                for (PIDToFetch pIDToFetch2 : pidToFetch) {
+                            }
+                            else
+                            {
+                                for (PIDToFetch pIDToFetch2 : pidToFetch)
+                                {
                                     float[] fArr = {0.0f};
                                     fArr[0] = torqueService.getValueForPid(Integer.parseInt(pIDToFetch2.getPID()[0].split(",")[0], 16), true);
                                     long[] pIDUpdateTime2 = torqueService.getPIDUpdateTime(pIDToFetch2.getPID());
-                                    if (!(pIDUpdateTime2[0] == pIDToFetch2.getLastFetch() || pIDUpdateTime2[0] == 0)) {
+                                    if (!(pIDUpdateTime2[0] == pIDToFetch2.getLastFetch() || pIDUpdateTime2[0] == 0))
+                                    {
                                         pIDToFetch2.putLastFetch(pIDUpdateTime2[0]);
-                                        if (OBD2Background.isDebugging) {
+                                        if (OBD2Background.isDebugging)
+                                        {
                                             StringBuilder sb7 = new StringBuilder();
                                             sb7.append("PID   ");
                                             sb7.append(pIDToFetch2.getPID()[0]);
@@ -304,20 +348,28 @@ public class OBD2Background {
                                     }
                                 }
                             }
-                        } else
-                            try {
+                        }
+                        else
+                        {
+                            try
+                            {
                                 Thread.sleep(250);
-                            } catch (InterruptedException e) {
+                            }
+                            catch (InterruptedException e)
+                            {
                                 e.printStackTrace();
                             }
+                        }
                     }
                     Log.d("OBS2AA", "Running StopSelf...");
                     OBD2Background.isRunning = false;
-                    if (mBind) {
+                    if (mBind)
+                    {
                         mBind = false;
                     }
                     connection = null;
-                    if (receiver != null) {
+                    if (receiver != null)
+                    {
 //                        unregisterReceiver(receiver);
                     }
                     receiver = null;
@@ -325,11 +377,12 @@ public class OBD2Background {
                     intent.setAction("org.prowl.torque.REQUEST_TORQUE_QUIT");
 //                    sendBroadcast(intent);
 //                    stopSelf();
-                } catch (Exception e) {
+                }
+                catch (Exception e)
+                {
                     e.printStackTrace();
                 }
             }
-
         };
 
         //Second Thread for monitoring fuel, this can pull much slower, once every 30 seconds for example.
@@ -342,44 +395,57 @@ public class OBD2Background {
                 boolean first = true;
                 boolean warm_engine = false;
                 int warm_engine_degree = prefs.getCoolantWarningValue();
-                while (isRunning) {
-                    if (torqueService != null) {
-                        if (first) {
+                while (isRunning)
+                {
+                    if (torqueService != null)
+                    {
+                        if (first)
+                        {
                             first = false;
-                            try {
+                            try
+                            {
                                 miles = !torqueService.getPreferredUnit("km").equalsIgnoreCase("km");
                                 celsius = torqueService.getPreferredUnit("°C").equalsIgnoreCase("°C");
-                            } catch (RemoteException e) {
+                            }
+                            catch (RemoteException e)
+                            {
                                 e.printStackTrace();
                             }
                         }
 
-                        try {
-
-                            if (prefs.shouldMonitorFuel()) {  //If we should monitor fuel
+                        try
+                        {
+                            if (prefs.shouldMonitorFuel())
+                            {  //If we should monitor fuel
                                 int fuelVal = Math.round(torqueService.getPIDValues(fuelPid)[0]);
-                                if ((fuelVal < 80) && (fuelPid[0].equalsIgnoreCase("ff126a")) || fuelVal < 5) {
-                                    if (lastwarningvalue != fuelVal) {
+                                if ((fuelVal < 80) && (fuelPid[0].equalsIgnoreCase("ff126a")) || fuelVal < 5)
+                                {
+                                    if (lastwarningvalue != fuelVal)
+                                    {
                                         String warrning = "";
-                                        if (fuelPid[0].equalsIgnoreCase("ff126a")) {
+                                        if (fuelPid[0].equalsIgnoreCase("ff126a"))
+                                        {
                                             if (miles)
                                                 // warrning = "Estimated fuel range is only: " + Math.round(fuelVal / 1.60) + " miles.";
                                                 warrning = context.getString(R.string.est_range, Math.round(fuelVal / 1.60), " miles");
                                             else
                                                 warrning = context.getString(R.string.est_range, fuelVal, " km");
-                                        } else
+                                        }
+                                        else
                                             warrning = context.getString(R.string.rem_fuel, fuelVal, " %");
                                         lastwarningvalue = fuelVal;
                                         showNotification(context.getResources().getString(R.string.low_fuel_tit), warrning, R.drawable.ic_danger_r, R.drawable.fuel);
                                     }
                                 }
                             }
-                            if (prefs.shouldMonitorCoolant()) { //If we should monitor coolant
+                            if (prefs.shouldMonitorCoolant()) // If we should monitor coolant
+                            {
                                 float coolantval = torqueService.getPIDValues(fuelPid)[1];
                                 if (!celsius)
                                     coolantval = UnitConvertHelper.ConvertValue(coolantval, "°C");
 
-                                if (!warm_engine && coolantval >= warm_engine_degree) {
+                                if (!warm_engine && coolantval >= warm_engine_degree)
+                                {
                                     Log.d("OBD2AA", "Should show the engine temp warning.");
                                     warm_engine = true;
                                     showNotification(context.getResources().getString(R.string.coolant_ok), context.getResources().getString(R.string.engine_warm), R.drawable.ic_danger_green, R.drawable.ic_coolant);
@@ -388,47 +454,59 @@ public class OBD2Background {
                                     Log.d("OBD2AA", "Should clear warm engine temp");
                                     NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
                                     notificationManager.cancel(1984);
-
                                 }
                             }
 
-                        } catch (RemoteException e) {
+                        }
+                        catch (RemoteException e)
+                        {
                             e.printStackTrace();
-                        } catch (InterruptedException e) {
+                        }
+                        catch (InterruptedException e)
+                        {
                             e.printStackTrace();
                         }
                     }
-                    try {
+                    try
+                    {
                         Thread.sleep(30000);
-                    } catch (InterruptedException e) {
+                    }
+                    catch (InterruptedException e)
+                    {
                         e.printStackTrace();
                     }
                 }
-
             }
         };
         thread.start();
-        if (prefs.shouldMonitorFuel() || prefs.shouldMonitorCoolant()) {
+        if (prefs.shouldMonitorFuel() || prefs.shouldMonitorCoolant())
+        {
             fuelwatcher.start();
         }
     }
 
-    public String getUnit(String unit) {
-        try {
+    public String getUnit(String unit)
+    {
+        try
+        {
             return torqueService.getPreferredUnit(unit);
-        } catch (RemoteException e) {
+        }
+        catch (RemoteException e)
+        {
             e.printStackTrace();
         }
         return unit;
     }
 
-    private void sortPids() {
-
+    private void sortPids()
+    {
         Log.d("OBD2AA", "PIDS to string....");
-        try {
+        try
+        {
             String[] pidsdesc = torqueService.getPIDInformation(pids);
 
-            for (int i = 0; i < pids.length; i++) {
+            for (int i = 0; i < pids.length; i++)
+            {
                 //Build the pidstofetch object with correct data
                 boolean needsconversion = !(torqueService.getPreferredUnit(units[i]).equalsIgnoreCase(units[i]));
                 // Log.d("OBD2AA","Pid "+pids[i] + "Status: " +pidMap.get(pids[i]));
@@ -436,63 +514,73 @@ public class OBD2Background {
                 String[] info = pidsdesc[i].split(",");
                 // Log.d("OBD2AA"," Max val stored for pid (" + pids[i]+"): "+prefs.getFloat("maxval_" + (i+1), 0) +" Reported from Torque: " + parseInt(info[3]) + "units: " +units[i] + ",Locked: " + prefs.getBoolean("locked_"+(i+1),false) +"needconversion: "+needsconversion);
 
-                if (!prefs.isLockedForGauge(i + 1) && prefs.getMaxValueForGauge(i + 1) != Float.parseFloat(info[3])) {
-                    if (EventBus.getDefault().hasSubscriberForEvent(GaugeUpdate.class)) {
+                if (!prefs.isLockedForGauge(i + 1) && prefs.getMaxValueForGauge(i + 1) == Float.POSITIVE_INFINITY)
+                {
+                    if (EventBus.getDefault().hasSubscriberForEvent(GaugeUpdate.class))
                         EventBus.getDefault().post(new GaugeUpdate(i, Float.parseFloat(info[3]), true, false));
-                    }
+
                     editor.putString("maxval_" + (i + 1), info[3]);
                     editor.apply();
 
                 }
-                if (needsconversion) {
-                    Float max = UnitConvertHelper.ConvertValue(Float.parseFloat(info[3]), units[i]);
-                    if (!prefs.isLockedForGauge(i + 1) && !prefs.getMaxValueForGauge(i + 1).equals(max)) {
-                        if (EventBus.getDefault().hasSubscriberForEvent(GaugeUpdate.class)) {
-                            EventBus.getDefault().post(new GaugeUpdate(i, max, true, false));
-                        }
-                        Log.d("OBD2AA", "Need to update Gauge_" + (i + 1) + "Max val: " + max);
-                        editor.putString("maxval_" + (i + 1), max.toString());
+                if (needsconversion)
+                {
+                    Float maxFromTorque = UnitConvertHelper.ConvertValue(Float.parseFloat(info[3]), units[i]);
+                    if (!prefs.isLockedForGauge(i + 1) && prefs.getMaxValueForGauge(i + 1).equals(Float.POSITIVE_INFINITY))
+                    {
+                        if (EventBus.getDefault().hasSubscriberForEvent(GaugeUpdate.class))
+                            EventBus.getDefault().post(new GaugeUpdate(i, maxFromTorque, true, false));
+
+                        Log.d("OBD2AA", "Need to update Gauge_" + (i + 1) + "Max val: " + maxFromTorque);
+                        editor.putString("maxval_" + (i + 1), maxFromTorque.toString());
                         editor.apply();
                     }
 
-                    Float min = UnitConvertHelper.ConvertValue(Float.parseFloat(info[4]), units[i]);
-                    if (!prefs.isLockedForGauge(i + 1) && !prefs.getMinValueForGauge(i + 1).equals(min)) {
-                        if (EventBus.getDefault().hasSubscriberForEvent(GaugeUpdate.class)) {
-                            EventBus.getDefault().post(new GaugeUpdate(i, min, false, true));
-                        }
-                        Log.d("OBD2AA", "Need to update Gauge_" + (i + 1) + "Min val: " + min);
-                        editor.putString("minval_" + (i + 1), min.toString());
+                    Float minFromTorque = UnitConvertHelper.ConvertValue(Float.parseFloat(info[4]), units[i]);
+                    if (!prefs.isLockedForGauge(i + 1) && !prefs.getMinValueForGauge(i + 1).equals(Float.NEGATIVE_INFINITY))
+                    {
+                        if (EventBus.getDefault().hasSubscriberForEvent(GaugeUpdate.class))
+                            EventBus.getDefault().post(new GaugeUpdate(i, minFromTorque, false, true));
+
+                        Log.d("OBD2AA", "Need to update Gauge_" + (i + 1) + "Min val: " + minFromTorque);
+                        editor.putString("minval_" + (i + 1), minFromTorque.toString());
                         editor.apply();
                     }
                 }
                 pidToFetch.add(new PIDToFetch(pids[i], true, 0, i, units[i], needsconversion, prefs.getMaxValueForGauge(i + 1), prefs.getMinValueForGauge(i + 1)));
             }
-        } catch (RemoteException e) {
+        }
+        catch (RemoteException e)
+        {
             throw new RuntimeException(e);
         }
     }
 
-    private void startTorque() {
+    private void startTorque()
+    {
         Intent intent = new Intent();
         intent.setClassName("org.prowl.torque", "org.prowl.torque.remote.TorqueService");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             context.startForegroundService(intent);
-        } else {
+        else
             context.startService(intent);
-        }
 
         boolean successfulBind = context.bindService(intent, connection, 0);
-        if (successfulBind) {
+        if (successfulBind)
+        {
             mBind = true;
             Log.d("HU", "Connected to torque service!");
-        } else {
+        }
+        else
+        {
             mBind = false;
             Log.e("HU", "Unable to connect to Torque plugin service");
         }
     }
 
-    protected void showNotification(String Title, String Subtitle, int actionicon, int thumbnail) {
-/*
+    protected void showNotification(String Title, String Subtitle, int actionicon, int thumbnail)
+    {
+    /*
         NotificationManager mNotifyMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         String NOTIFICATION_CHANNEL_ID = "torque_not_channel";
 
@@ -523,7 +611,6 @@ public class OBD2Background {
 
 
         mNotifyMgr.notify(1984,mynot.build());
-
-*/
+    */
     }
 }

@@ -23,7 +23,7 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
 import uk.co.borconi.emil.obd2aa.R;
-import uk.co.borconi.emil.obd2aa.pid.PidList;
+import uk.co.borconi.emil.obd2aa.pid.PidListItem;
 
 
 public class GaugePreference {
@@ -77,7 +77,7 @@ public class GaugePreference {
             int i = 0;
             String[] entries = new String[pidlist.size()];
             String[] entriesValues = new String[pidlist.size()];
-            for (PidList pid : pidlist) {
+            for (PidListItem pid : pidlist) {
                 entries[i] = pid.getPidName();
                 entriesValues[i] = pid.getPid() + "__" + pid.getShortPidName() + "__" + pid.getUnit(); // TODO This is ugly
                 i++;

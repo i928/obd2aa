@@ -43,13 +43,13 @@ import java.util.List;
 
 import uk.co.borconi.emil.obd2aa.databinding.ActivityMainBinding;
 import uk.co.borconi.emil.obd2aa.helpers.PreferencesHelper;
-import uk.co.borconi.emil.obd2aa.pid.PidList;
+import uk.co.borconi.emil.obd2aa.pid.PidListItem;
 import uk.co.borconi.emil.obd2aa.services.OBD2Background;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    public static List<PidList> pidlist = null;
+    public static List<PidListItem> pidlist = null;
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
     private SharedPreferences.Editor editor;
@@ -126,17 +126,17 @@ public class MainActivity extends AppCompatActivity {
 
             }
             Log.d("HU", "Have Torque service connection!");
-            pidlist = new ArrayList<PidList>();
+            pidlist = new ArrayList<PidListItem>();
 
-            String[] pidsdesc = null;
+            String[] pidInformationList = null;
             String[] pids = null;
             try {
                 pids = torqueService.listAllPIDs();
-                pidsdesc = torqueService.getPIDInformation(pids);
+                pidInformationList = torqueService.getPIDInformation(pids);
                 for (int i = 0; i < pids.length; i++) {
-                    pidsdesc[i] = pidsdesc[i] + "," + pids[i];
+                    pidInformationList[i] = pidInformationList[i] + "," + pids[i];
                 }
-                Arrays.sort(pidsdesc, String.CASE_INSENSITIVE_ORDER);
+                Arrays.sort(pidInformationList, String.CASE_INSENSITIVE_ORDER);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -145,14 +145,14 @@ public class MainActivity extends AppCompatActivity {
                 return;
 
             for (int i = 0; i < pids.length; i++) {
-                String[] info = pidsdesc[i].split(",");
+                String[] info = pidInformationList[i].split(",");
                 if (isdebugging)
                     try {
                         Log.d("OBD2AA", "Pid name: " + info[0] + " Units: " + info[2] + " Unit conversion: " + torqueService.getPreferredUnit(info[2]));
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
-                pidlist.add(new PidList(pidsdesc[i]));
+                pidlist.add(new PidListItem(pidInformationList[i]));
             }
             navController.popBackStack();
             navController.navigate(R.id.FirstFragment);

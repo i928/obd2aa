@@ -18,11 +18,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.preference.ListPreference;
 
 import uk.co.borconi.emil.obd2aa.R;
-import uk.co.borconi.emil.obd2aa.pid.PidList;
+import uk.co.borconi.emil.obd2aa.pid.PidListItem;
 
 public class PidListPreference extends ListPreference implements View.OnClickListener, TextWatcher {
 
-    ArrayAdapter<PidList> adapter = null;
+    ArrayAdapter<PidListItem> adapter = null;
 
     public PidListPreference(Context context) {
         super(context);
@@ -66,8 +66,8 @@ public class PidListPreference extends ListPreference implements View.OnClickLis
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_single_choice, pidlist);
         list.setAdapter(adapter);
 
-        PidList selectedpid = null;
-        for (PidList pid : pidlist) {
+        PidListItem selectedpid = null;
+        for (PidListItem pid : pidlist) {
             if ((pid.getPid() + "__" + pid.getShortPidName() + "__" + pid.getUnit()).equals(getValue())) { // TODO This is ugly
                 selectedpid = pid;
                 break;
@@ -82,7 +82,7 @@ public class PidListPreference extends ListPreference implements View.OnClickLis
         builder.setTitle(getContext().getString(R.string.choose_button_label) + " PID");
         AlertDialog dialog = builder.create();
         list.setOnItemClickListener((a, v, position, id) -> {
-            PidList pid = (PidList) a.getItemAtPosition(position);
+            PidListItem pid = (PidListItem) a.getItemAtPosition(position);
             setValue(pid.getPid() + "__" + pid.getShortPidName() + "__" + pid.getUnit()); // TODO This is ugly
 
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);

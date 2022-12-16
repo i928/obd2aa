@@ -183,12 +183,18 @@ public class PreferencesHelper {
     }
 
     public Float getMaxValueForGauge(int gauge) {
-        String output = preferences.getString(String.format("maxval_%s", gauge), "0");
+        String output = preferences.getString(String.format("maxval_%s", gauge), "POSITIVE_INFINITY");
+        if (output == "POSITIVE_INFINITY")
+            return Float.POSITIVE_INFINITY;
+
         return Float.parseFloat(output);
     }
 
     public Float getMinValueForGauge(int gauge) {
-        String output = preferences.getString(String.format("minval_%s", gauge), "0");
+        String output = preferences.getString(String.format("minval_%s", gauge), "NEGATIVE_INFINITY");
+        if (output == "NEGATIVE_INFINITY")
+            return Float.NEGATIVE_INFINITY;
+
         return Float.parseFloat(output);
     }
 
