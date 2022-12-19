@@ -4,10 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class PreferencesHelper {
 
@@ -235,8 +232,21 @@ public class PreferencesHelper {
         return preferences.getBoolean(String.format("showneedle_%s", gauge), true);
     }
 
-    public boolean shouldShowScaleForGauge(int gauge) {
-        return preferences.getBoolean(String.format("showscale_%s", gauge), true);
+    public boolean shouldShowTicksForGauge(int gauge)
+    {
+        return preferences.getBoolean(String.format("showMajorTickMarks_%s", gauge), true);
+    }
+
+    public int numberOfMajorTicksForGauge(int gauge)
+    {
+        String output = preferences.getString(String.format("numberOfMajorTicks_%s", gauge), "10");
+        return Integer.parseInt(output);
+    }
+
+    public int numberOfMinorTicksForGauge(int gauge)
+    {
+        String output = preferences.getString(String.format("numberOfMinorSubTicks_%s", gauge), "0");
+        return Integer.parseInt(output);
     }
 
     public boolean shouldShowTextForGauge(int gauge) {

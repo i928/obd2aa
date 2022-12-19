@@ -11,6 +11,7 @@ import androidx.constraintlayout.helper.widget.Flow;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import uk.co.borconi.emil.obd2aa.ArcProgress;
+import uk.co.borconi.emil.obd2aa.Constants;
 import uk.co.borconi.emil.obd2aa.R;
 import uk.co.borconi.emil.obd2aa.helpers.PreferencesHelper;
 
@@ -105,10 +106,10 @@ public class DrawGauges {
         newArc.setTextColor(prefs.getTextColor());
         newArc.setStrokeWidth(prefs.getArchWidth());
 
-        if (prefs.getStyleForGauge(gaugeNumber) == 6) {
+        if (prefs.getStyleForGauge(gaugeNumber) == Constants.GaugeStyles.PartialFilled1) {
             newArc.setBackgroundResource(R.drawable.bg1);
             newArc.setShowNeedle(false);
-        } else if (prefs.getStyleForGauge(gaugeNumber) == 7) {
+        } else if (prefs.getStyleForGauge(gaugeNumber) == Constants.GaugeStyles.PartialFilled2) {
             newArc.setBackgroundResource(R.drawable.bg2);
             newArc.setShowNeedle(false);
         } else {
@@ -116,7 +117,10 @@ public class DrawGauges {
             newArc.setShowNeedle(prefs.shouldShowNeedleForGauge(gaugeNumber));
             newArc.setNeedleColor(prefs.getNeedleColor());
         }
-        newArc.setShowArc(prefs.shouldShowScaleForGauge(gaugeNumber));
+        newArc.setShowTickMarks(prefs.shouldShowTicksForGauge(gaugeNumber));
+        newArc.setNumberOfMajorTicks(prefs.numberOfMajorTicksForGauge(gaugeNumber));
+        newArc.setNumberOfMinorTicks(prefs.numberOfMinorTicksForGauge(gaugeNumber));
+
         newArc.setShowText(prefs.shouldShowTextForGauge(gaugeNumber));
         newArc.setUseGradientColor(prefs.shouldUseGradientTextForGauge(gaugeNumber));
         newArc.setShowDecimal(prefs.shouldShowDecimalForGauge(gaugeNumber));

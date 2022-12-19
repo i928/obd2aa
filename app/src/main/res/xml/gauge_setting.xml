@@ -47,10 +47,28 @@
         app:iconSpaceReserved="false" />
 
     <androidx.preference.SwitchPreferenceCompat
-        android:key="showscale"
+        android:key="showMajorTickMarks"
         android:defaultValue="true"
-        android:title="@string/show_scale"
+        android:title="@string/showTickMarks"
         app:iconSpaceReserved="false" />
+
+    <androidx.preference.EditTextPreference
+        android:digits="0123456789"
+        android:inputType="numberDecimal"
+        android:key="numberOfMajorTicks"
+        android:title="@string/numberOfMajorTicks"
+        android:defaultValue="10"
+        app:iconSpaceReserved="false"
+        app:useSimpleSummaryProvider="true" />
+
+    <androidx.preference.EditTextPreference
+        android:digits="0123456789"
+        android:inputType="numberDecimal"
+        android:key="numberOfMinorSubTicks"
+        android:title="@string/numberOfMinorSubTicks"
+        android:defaultValue="0"
+        app:iconSpaceReserved="false"
+        app:useSimpleSummaryProvider="true" />
 
     <androidx.preference.SwitchPreferenceCompat
         android:key="showunit"

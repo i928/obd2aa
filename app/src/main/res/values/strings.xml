@@ -133,7 +133,6 @@ You need to have Torque Pro installed in order to use this app."</string>
     <string name="share_settings">Share settings</string>
     <string name="show_decimals">Show decimals:</string>
     <string name="show_needle">Show needle:</string>
-    <string name="show_scale">Show scale:</string>
     <string name="show_text">Show text:</string>
     <string name="show_unit">Show unit:</string>
     <string name="speed_hack">Remove 6 tap limits (when possible)</string>
@@ -155,4 +154,7 @@ You need to have Torque Pro installed in order to use this app."</string>
     <string name="wrong_app_action">Please remove the following apps before continuing</string>
     <string name="wrong_app_header">Restricted apps found!</string>
     <string name="initiating_torque">Initiating Torque Pro</string>
+    <string name="showTickMarks">Show tick marks:</string>
+    <string name="numberOfMajorTicks">Number of major tick marks:</string>
+    <string name="numberOfMinorSubTicks">Number of minor tick marks (between major ticks):</string>
 </resources>

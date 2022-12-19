@@ -15,7 +15,11 @@
         <attr name="warn1" format="integer" />
         <attr name="warn2" format="integer" />
         <attr name="isReverse" format="boolean" />
-        <attr name="showArc" format="boolean" />
+
+        <attr name="showTickMarks" format="boolean" />
+        <attr name="numberOfMajorTicks" format="integer" />
+        <attr name="numberOfMinorSubTicks" format="integer" />
+
         <attr name="showtext" format="boolean" />
         <attr name="showNeedle" format="boolean" />
 

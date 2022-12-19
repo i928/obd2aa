@@ -18,7 +18,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
-import uk.co.borconi.emil.obd2aa.Constants;
+import java.util.ArrayList;
 
 /**
  * Created by Emil on 12/08/2017.
@@ -54,7 +54,7 @@ public class ArcProgress extends View
     private final int minSize;
     protected Paint textPaint;
     //Typeface type = Typeface.createFromAsset(getContext().getAssets(), "fonts/RobotoCondensed.ttf");
-    float[][] scale_pos = new float[12][];
+
     private Paint paint;
     private float strokeWidth;
     private float suffixTextSize;
@@ -72,7 +72,14 @@ public class ArcProgress extends View
     private float warn1;
     private float warn2;
     private boolean isReverse;
-    private boolean showArc;
+
+    private boolean showTickMarks;
+    private int numberOfMajorTicks;
+    private int numberOfMinorSubTicks;
+    ArrayList<float[]> tickPositions = new ArrayList<float[]>();
+    int tickStartAngle = -145;
+    int tickEndAngle = 145;
+
     private boolean showText;
     private boolean showNeedle;
     private boolean showDecimal;
@@ -89,7 +96,6 @@ public class ArcProgress extends View
     private SweepGradient gradient;
     private int myRadius;
     private float cx;
-    private int x;
     private int needleColor = -1;
     private int indent = 0;
     private float startPosition = 270;
@@ -132,7 +138,11 @@ public class ArcProgress extends View
         warn1 = attributes.getInt(R.styleable.ArcProgress_warn1, 75);
         warn2 = attributes.getInt(R.styleable.ArcProgress_warn2, 85);
         isReverse = attributes.getBoolean(R.styleable.ArcProgress_isReverse, false);
-        showArc = attributes.getBoolean(R.styleable.ArcProgress_showArc, true);
+
+        showTickMarks = attributes.getBoolean(R.styleable.ArcProgress_showTickMarks, true);
+        numberOfMajorTicks = attributes.getInt(R.styleable.ArcProgress_numberOfMajorTicks, 10);
+        numberOfMinorSubTicks = attributes.getInt(R.styleable.ArcProgress_numberOfMinorSubTicks, 0);
+
         showText = attributes.getBoolean(R.styleable.ArcProgress_showtext, false);
         showNeedle = attributes.getBoolean(R.styleable.ArcProgress_showNeedle, true);
         showDecimal = attributes.getBoolean(R.styleable.ArcProgress_showNeedle, false);
@@ -197,9 +207,21 @@ public class ArcProgress extends View
         this.invalidate();
     }
 
-    public void setShowArc(boolean showArc)
+    public void setShowTickMarks(boolean showTickMarks)
     {
-        this.showArc = showArc;
+        this.showTickMarks = showTickMarks;
+        this.invalidate();
+    }
+
+    public void setNumberOfMajorTicks(int numberOfMajorTicks)
+    {
+        this.numberOfMajorTicks = numberOfMajorTicks;
+        this.invalidate();
+    }
+
+    public void setNumberOfMinorTicks(int numberOfMinorSubTicks)
+    {
+        this.numberOfMinorSubTicks = numberOfMinorSubTicks;
         this.invalidate();
     }
 
@@ -477,7 +499,6 @@ public class ArcProgress extends View
 
         myRadius = size / 2;
         cx = size / 2f;
-        x = 0;
         if (getGaugeStyle() == Constants.GaugeStyles.PartialFilled1 || getGaugeStyle() == Constants.GaugeStyles.PartialFilled2)
         {
             float scaleLength = (14 / (480 / (float) size));
@@ -491,24 +512,47 @@ public class ArcProgress extends View
 
                 float stopX = (float) (cx + (myRadius - scaleLength) * Math.sin(angle2));
                 float stopY = (float) (cx - (myRadius - scaleLength) * Math.cos(angle2));
-                scale_pos[x] = new float[]{startX, startY, stopX, stopY};
-                x++;
+                tickPositions.add(new float[]{startX, startY, stopX, stopY});
             }
         }
         else
         {
             float scaleMarkSize = getResources().getDisplayMetrics().density * getStrokeWidth();
-            for (int i = -145; i <= 145; i += 29)
+            float majorTicksInterval = (this.tickEndAngle - this.tickStartAngle) / this.numberOfMajorTicks;
+            float minorTicksInterval = this.numberOfMinorSubTicks != 0
+                    ? majorTicksInterval / (this.numberOfMinorSubTicks + 1)
+                    : 0;
+
+            if (this.numberOfMajorTicks > 0)
             {
-                float angle2 = (float) Math.toRadians(i); // Need to convert to radians first
+                for (float i = this.tickStartAngle; i <= this.tickEndAngle; i += majorTicksInterval)
+                {
+                    float angle2 = (float) Math.toRadians(i); // Need to convert to radians first
 
-                float startX = (float) (cx + (myRadius - 2 - getStrokeWidth()) * Math.sin(angle2));
-                float startY = (float) (cx - (myRadius - 2 - getStrokeWidth()) * Math.cos(angle2));
+                    float startX = (float) (cx + (myRadius - 2 - getStrokeWidth()) * Math.sin(angle2));
+                    float startY = (float) (cx - (myRadius - 2 - getStrokeWidth()) * Math.cos(angle2));
 
-                float stopX = (float) (cx + (myRadius - 2 - getStrokeWidth() - scaleMarkSize) * Math.sin(angle2));
-                float stopY = (float) (cx - (myRadius - 2 - getStrokeWidth() - scaleMarkSize) * Math.cos(angle2));
-                scale_pos[x] = new float[]{startX, startY, stopX, stopY};
-                x++;
+                    float stopX = (float) (cx + (myRadius - 2 - getStrokeWidth() - scaleMarkSize) * Math.sin(angle2));
+                    float stopY = (float) (cx - (myRadius - 2 - getStrokeWidth() - scaleMarkSize) * Math.cos(angle2));
+                    tickPositions.add(new float[]{startX, startY, stopX, stopY});
+                    if (tickPositions.size() < this.numberOfMajorTicks * (numberOfMinorSubTicks+1) + 1
+                            && this.numberOfMinorSubTicks > 0)
+                    {
+                        // only draw minor ticks if we did not draw the last major tick already
+                        for (float j = i + minorTicksInterval; j <= i + (this.numberOfMinorSubTicks * minorTicksInterval); j += minorTicksInterval)
+                        {
+                            float subAngle2 = (float) Math.toRadians(j);
+
+                            float subStartX = (float) (cx + (myRadius - 2 - getStrokeWidth()) * Math.sin(subAngle2));
+                            float subStartY = (float) (cx - (myRadius - 2 - getStrokeWidth()) * Math.cos(subAngle2));
+
+                            float subStopX = (float) (cx + (myRadius - 2 - getStrokeWidth() - (scaleMarkSize / 3)) * Math.sin(subAngle2));
+                            float subStopY = (float) (cx - (myRadius - 2 - getStrokeWidth() - (scaleMarkSize / 3)) * Math.cos(subAngle2));
+
+                            tickPositions.add(new float[]{subStartX, subStartY, subStopX, subStopY});
+                        }
+                    }
+                }
             }
         }
 
@@ -585,7 +629,7 @@ public class ArcProgress extends View
             paint.setShader(null);
         }
 
-        if (showArc) // This is show Scale actually
+        if (showTickMarks)
         {
             paint.setStyle(Paint.Style.STROKE);
             if (getGaugeStyle() == Constants.GaugeStyles.PartialFilled1
@@ -602,16 +646,16 @@ public class ArcProgress extends View
                     || getGaugeStyle() == Constants.GaugeStyles.PartialFilled2)
             {
                 paint.setTextSize(getWidth() / 14);
-                for (int i = 0; i < x; i++)
+                for (int i = 0; i < tickPositions.size(); i++)
                 {
-                    canvas.drawLine(scale_pos[i][0], scale_pos[i][1], scale_pos[i][2], scale_pos[i][3], paint);
+                    canvas.drawLine(tickPositions.get(i)[0], tickPositions.get(i)[1], tickPositions.get(i)[2], tickPositions.get(i)[3], paint);
                 }
             }
             else
             {
-                for (int i = 0; i < x; i++)
+                for (int i = 0; i < tickPositions.size(); i++)
                 {
-                    canvas.drawLine(scale_pos[i][0], scale_pos[i][1], scale_pos[i][2], scale_pos[i][3], paint);
+                    canvas.drawLine(tickPositions.get(i)[0], tickPositions.get(i)[1], tickPositions.get(i)[2], tickPositions.get(i)[3], paint);
                 }
             }
             paint.setStrokeWidth(getStrokeWidth());
