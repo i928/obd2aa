@@ -234,7 +234,7 @@ public class PreferencesHelper {
 
     public boolean shouldShowTicksForGauge(int gauge)
     {
-        return preferences.getBoolean(String.format("showMajorTickMarks_%s", gauge), true);
+        return preferences.getBoolean(String.format("showTickMarks_%s", gauge), true);
     }
 
     public int numberOfMajorTicksForGauge(int gauge)

@@ -107,6 +107,13 @@ public class GaugePreference {
         if (customBackgroundPath != null) {
             customBackgroundPath.setDependency("use_custom_bg_" + gaugecount);
         }
+
+        Preference majorTickCount = group.findPreference("numberOfMajorTicks_" + gaugecount);
+        if (majorTickCount != null)
+            majorTickCount.setDependency("showTickMarks_" + gaugecount);
+        Preference minorTickCount = group.findPreference("numberOfMinorSubTicks_" + gaugecount);
+        if (minorTickCount != null)
+            minorTickCount.setDependency("showTickMarks_" + gaugecount);
     }
 
     private Preference createItemFromTag(String name, AttributeSet attrs) {

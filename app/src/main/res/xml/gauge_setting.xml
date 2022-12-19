@@ -47,7 +47,7 @@
         app:iconSpaceReserved="false" />
 
     <androidx.preference.SwitchPreferenceCompat
-        android:key="showMajorTickMarks"
+        android:key="showTickMarks"
         android:defaultValue="true"
         android:title="@string/showTickMarks"
         app:iconSpaceReserved="false" />
